@@ -1,8 +1,12 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import Inline from '../../components/inline-style';
+import Footer from '../../components/Footer';
+import IconButton from '@material-ui/core/IconButton';
+import ToolbarProducts from '../../components/ToolbarProducts';
+import { Toolbar } from '@material-ui/core';
+import logo from '../../assets/img/icon-des.png';
 
 const API_URL =
   process.env.NODE_ENV === 'production'
@@ -13,13 +17,22 @@ function App() {
   return (
     <div>
       <AppBar position="static">
-        <Typography variant="h6" color="inherit">
-          AppBar API: {API_URL}
-        </Typography>
+        <Toolbar>
+          <Typography variant="h6" color="inherit">
+            <IconButton color="inherit" aria-label="Menu">
+              <img src={logo} />
+            </IconButton>
+            <Typography variant="h6" color="inherit">
+              Science Products
+            </Typography>
+            {/* AppBar API: {API_URL} */}
+          </Typography>
+        </Toolbar>
       </AppBar>
-      <Inline />
-      <Button color="primary">Test Primary</Button>
-      <Button color="secondary">Test Secondary</Button>
+
+      <ToolbarProducts />
+
+      <Footer />
     </div>
   );
 }

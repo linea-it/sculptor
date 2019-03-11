@@ -8,7 +8,12 @@ const textSecondary = grey[900];
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: primary },
+    primary: {
+      main: primary,
+      light: '#7986cb',
+      dark: '#303f9f',
+      contrastText: '#fff',
+    },
     secondary: { main: secondary },
     textPrimary: { main: textPrimary },
     textSecondary: textSecondary,
