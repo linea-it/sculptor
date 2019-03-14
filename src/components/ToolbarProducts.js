@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import { Toolbar, Button } from '@material-ui/core';
-// import { Toolbar } from '@material-ui/core';
+import AppBar from '@material-ui/core/AppBar';
+import Paper from '@material-ui/core/Paper';
+
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
+import InputBase from '@material-ui/core/InputBase';
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
   container: {
@@ -15,43 +19,48 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
+    minWidth: 120,
+    color: theme.palette.primary.contrastText,
   },
   dense: {
     marginTop: 16,
+  },
+  appBar: {
+    background: theme.palette.primary.light,
+    color: theme.palette.primary.contrastText,
+  },
+  paper: {
+    margin: 15,
   },
   menu: {
     width: 200,
   },
   button: {
-    margin: theme.spacing.unit,
-    padding: '6px 50px',
+    margin: theme.spacing.unit * 2,
+    padding: '3px 20px',
+  },
+  search: {
+    marginLeft: theme.spacing.unit * 3,
+    padding: '8px 60px',
   },
 });
 
-const namesInputs = [
-  { name: 'release' },
-  { name: 'dataset' },
-  { name: 'type' },
-  { name: 'class' },
-  { name: 'band' },
-];
-
 const currencies = [
   {
-    value: 'USD',
-    label: '$',
-  },
-  {
-    value: 'EUR',
+    value: '',
     label: '',
   },
   {
-    value: 'BTC',
-    label: '฿',
+    value: '',
+    label: '',
   },
   {
-    value: 'JPY',
-    label: '¥',
+    value: '',
+    label: '',
+  },
+  {
+    value: '',
+    label: '',
   },
 ];
 
@@ -73,139 +82,134 @@ class ToolbarProducts extends React.Component {
     const { classes } = this.props;
 
     return (
-      // <Toolbar>
-      (
-        <div>
-          <form className={classes.container} noValidate autoComplete="off">
-            <TextField
-              id="filled-select-currency-native"
-              select
-              label="release"
-              className={classes.textField}
-              value={this.state.currency}
-              onChange={this.handleChange('currency')}
-              SelectProps={{
-                native: true,
-                MenuProps: {
-                  className: classes.menu,
-                },
-              }}
-              helperText="Please select your currency"
-              margin="normal"
-              variant="filled"
+      <React.Fragment>
+        <AppBar className={classes.appBar} position="relative">
+          <Toolbar classesName={classes.toolbar}>
+            <form className={classes.container} noValidate autoComplete="off">
+              <Grid xl={12}>
+                <TextField
+                  id="standard-select-currency-native"
+                  select
+                  label="Release"
+                  className={classes.textField}
+                  value={this.state.currency}
+                  onChange={this.handleChange('currency')}
+                  SelectProps={{
+                    native: true,
+                    MenuProps: {
+                      className: classes.menu,
+                    },
+                  }}
+                  margin="normal"
+                >
+                  {currencies.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+                <TextField
+                  id="standard-select-currency-native"
+                  select
+                  label="Dataset"
+                  className={classes.textField}
+                  value={this.state.currency}
+                  onChange={this.handleChange('currency')}
+                  SelectProps={{
+                    native: true,
+                    MenuProps: {
+                      className: classes.menu,
+                    },
+                  }}
+                  margin="normal"
+                >
+                  {currencies.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+                <TextField
+                  id="standard-select-currency-native"
+                  select
+                  label="Type"
+                  className={classes.textField}
+                  value={this.state.currency}
+                  onChange={this.handleChange('currency')}
+                  SelectProps={{
+                    native: true,
+                    MenuProps: {
+                      className: classes.menu,
+                    },
+                  }}
+                  margin="normal"
+                >
+                  {currencies.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+                <TextField
+                  id="standard-select-currency-native"
+                  select
+                  label="Class"
+                  className={classes.textField}
+                  value={this.state.currency}
+                  onChange={this.handleChange('currency')}
+                  SelectProps={{
+                    native: true,
+                    MenuProps: {
+                      className: classes.menu,
+                    },
+                  }}
+                  margin="normal"
+                >
+                  {currencies.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+                <TextField
+                  id="standard-select-currency-native"
+                  select
+                  label="Band"
+                  className={classes.textField}
+                  value={this.state.currency}
+                  onChange={this.handleChange('currency')}
+                  SelectProps={{
+                    native: true,
+                    MenuProps: {
+                      className: classes.menu,
+                    },
+                  }}
+                  margin="normal"
+                >
+                  {currencies.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+            </form>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
             >
-              {currencies.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </TextField>
-            <TextField
-              id="filled-select-currency-native"
-              select
-              label="dataset"
-              className={classes.textField}
-              value={this.state.currency}
-              onChange={this.handleChange('currency')}
-              SelectProps={{
-                native: true,
-                MenuProps: {
-                  className: classes.menu,
-                },
-              }}
-              helperText="Please select your currency"
-              margin="normal"
-              variant="filled"
-            >
-              {currencies.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </TextField>
-            <TextField
-              id="filled-select-currency-native"
-              select
-              label="type"
-              className={classes.textField}
-              value={this.state.currency}
-              onChange={this.handleChange('currency')}
-              SelectProps={{
-                native: true,
-                MenuProps: {
-                  className: classes.menu,
-                },
-              }}
-              helperText="Please select your currency"
-              margin="normal"
-              variant="filled"
-            >
-              {currencies.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </TextField>
-            <TextField
-              id="filled-select-currency-native"
-              select
-              label="class"
-              className={classes.textField}
-              value={this.state.currency}
-              onChange={this.handleChange('currency')}
-              SelectProps={{
-                native: true,
-                MenuProps: {
-                  className: classes.menu,
-                },
-              }}
-              helperText="Please select your currency"
-              margin="normal"
-              variant="filled"
-            >
-              {currencies.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </TextField>
-            <TextField
-              id="filled-select-currency-native"
-              select
-              label="class"
-              className={classes.textField}
-              value={this.state.currency}
-              onChange={this.handleChange('currency')}
-              SelectProps={{
-                native: true,
-                MenuProps: {
-                  className: classes.menu,
-                },
-              }}
-              helperText="Please select your currency"
-              margin="normal"
-              variant="filled"
-            >
-              {currencies.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </TextField>
-          </form>
-          <Button
-            variant="contained"
-            size="small"
-            color="secondary"
-            className={classes.button}
-          >
-            Secondary
-          </Button>
-        </div>
-      ),
-      {
-        /* </Toolbar> */
-      }
+              Clear Filter
+            </Button>
+            <InputBase placeholder="Search" />
+            <IconButton className={classes.iconButton} aria-label="Search">
+              <Icon className={classes.icon} color="primary">
+                search
+              </Icon>
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      </React.Fragment>
     );
   }
 }

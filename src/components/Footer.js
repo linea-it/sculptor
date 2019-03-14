@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-// import logo from 'logo.png';
+import logo from './../../src/assets/img/linea-logo-mini.png';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Typography, CardMedia } from '@material-ui/core';
 import { prototype } from 'node-notifier/notifiers/balloon';
@@ -13,8 +13,9 @@ const styles = theme => ({
     bottom: 0,
   },
   media: {
-    height: '',
-    width: '',
+    marginLeft: 5,
+    height: 10,
+    width: 30,
   },
   toolbar: {
     alignItems: 'center',
@@ -34,10 +35,10 @@ function Footer(props) {
           <Typography className={classes.grow} color="inherit">
             Developer Portal Instance
           </Typography>
-          <Typography color="inherit">Powered by LineA</Typography>
+          <Typography color="inherit">Powered by </Typography>
+          <CardMedia className={classes.media} image={logo} title="LIneA" />
         </Toolbar>
         {/* <img src={logo} /> */}
-        {/* <CardMedia className={classes.media} image={Logo} title="LIneA" /> */}
       </AppBar>
     </React.Fragment>
   );
