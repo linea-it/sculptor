@@ -2,12 +2,12 @@ import React from 'react';
 import {
   Grid,
   Table,
+  PagingPanel,
   TableHeaderRow,
 } from '@devexpress/dx-react-grid-material-ui';
-import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-import { Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import { PagingState, IntegratedPaging } from '@devexpress/dx-react-grid';
 
 const styles = {
   root: {
@@ -64,8 +64,11 @@ class TableDX extends React.Component {
               { name: 'date', title: 'Date' },
             ]}
           >
+            <PagingState defaultCurrentPage={0} pageSize={5} />
+            <IntegratedPaging />
             <Table />
             <TableHeaderRow />
+            <PagingPanel />
           </Grid>
         </Card>
       </React.Fragment>

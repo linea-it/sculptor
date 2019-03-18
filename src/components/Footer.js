@@ -5,7 +5,6 @@ import AppBar from '@material-ui/core/AppBar';
 import logo from './../../src/assets/img/linea-logo-mini.png';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Typography, CardMedia } from '@material-ui/core';
-import { prototype } from 'node-notifier/notifiers/balloon';
 
 const styles = theme => ({
   appBar: {

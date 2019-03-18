@@ -1,214 +1,261 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import { Toolbar, Button } from '@material-ui/core';
-import AppBar from '@material-ui/core/AppBar';
-import Paper from '@material-ui/core/Paper';
 
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import InputBase from '@material-ui/core/InputBase';
-import Grid from '@material-ui/core/Grid';
+import CentaurusApi from './../api/api';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
 
 const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
   },
-  textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    minWidth: 120,
-    color: theme.palette.primary.contrastText,
-  },
-  dense: {
-    marginTop: 16,
-  },
-  appBar: {
-    background: theme.palette.primary.light,
-    color: theme.palette.primary.contrastText,
-  },
-  paper: {
-    margin: 15,
-  },
-  menu: {
-    width: 200,
-  },
   button: {
     margin: theme.spacing.unit * 2,
     padding: '3px 20px',
   },
+  select: {
+    minWidth: 140,
+  },
+  formControl: {
+    marginLeft: theme.spacing.unit * 2,
+  },
   search: {
-    marginLeft: theme.spacing.unit * 3,
+    marginLeft: theme.spacing.unit * 4,
     padding: '8px 60px',
   },
 });
 
-const currencies = [
-  {
-    value: '',
-    label: '',
-  },
-  {
-    value: '',
-    label: '',
-  },
-  {
-    value: '',
-    label: '',
-  },
-  {
-    value: '',
-    label: '',
-  },
-];
-
 class ToolbarProducts extends React.Component {
   state = {
-    name: 'Cat in the Hat',
-    age: '',
-    multiline: 'Controlled',
-    currency: 'EUR',
+    releases: [],
+    datasets: [],
+    types: [],
+    classesInput: [],
+    bands: '',
+    release: '',
+    dataset: '',
+    type: '',
+    class: '',
+    band: '',
   };
 
-  handleChange = name => event => {
+  onClearSelects = () => {
     this.setState({
-      [name]: event.target.value,
+      band: '',
+      release: '',
+      dataset: '',
+      type: '',
+      class: '',
+    });
+  };
+  componentDidMount() {
+    this.loadReleases();
+    this.loadClass();
+  }
+
+  loadReleases = async () => {
+    const dataReleases = await CentaurusApi.getAllrelease();
+    const releases = dataReleases.releaseTagList.edges.map(edge => edge.node);
+    this.setState({
+      releases: releases,
+    });
+  };
+
+  handleChangeRelease = event => {
+    const release = event.target.value;
+
+    this.setState(
+      {
+        release: release,
+      },
+      () => {
+        this.loadDataset(release);
+      }
+    );
+  };
+
+  loadDataset = async tagId => {
+    const dDataset = await CentaurusApi.getDataset(tagId);
+    const datasets = dDataset.fieldsByTagId;
+    console.log('Datasets: ', datasets);
+    this.setState({
+      datasets: datasets,
+    });
+  };
+
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  handleChangeDataset = event => {
+    const dataset = event.target.value;
+
+    this.setState({
+      dataset: dataset,
+    });
+  };
+
+  loadClass = async () => {
+    const dataClass = await CentaurusApi.getAllClass();
+    const productClass = dataClass.productClassList.edges.map(
+      edge => edge.node
+    );
+    this.setState({
+      classesInput: productClass,
+    });
+  };
+
+  handleChangeClass = event => {
+    const classe = event.target.value;
+
+    this.setState({
+      class: classe,
     });
   };
 
   render() {
     const { classes } = this.props;
-
+    const { releases, datasets, types, classesInput, bands } = this.state;
     return (
       <React.Fragment>
-        <AppBar className={classes.appBar} position="relative">
-          <Toolbar classesName={classes.toolbar}>
-            <form className={classes.container} noValidate autoComplete="off">
-              <Grid xl={12}>
-                <TextField
-                  id="standard-select-currency-native"
-                  select
-                  label="Release"
-                  className={classes.textField}
-                  value={this.state.currency}
-                  onChange={this.handleChange('currency')}
-                  SelectProps={{
-                    native: true,
-                    MenuProps: {
-                      className: classes.menu,
-                    },
-                  }}
-                  margin="normal"
-                >
-                  {currencies.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
-                <TextField
-                  id="standard-select-currency-native"
-                  select
-                  label="Dataset"
-                  className={classes.textField}
-                  value={this.state.currency}
-                  onChange={this.handleChange('currency')}
-                  SelectProps={{
-                    native: true,
-                    MenuProps: {
-                      className: classes.menu,
-                    },
-                  }}
-                  margin="normal"
-                >
-                  {currencies.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
-                <TextField
-                  id="standard-select-currency-native"
-                  select
-                  label="Type"
-                  className={classes.textField}
-                  value={this.state.currency}
-                  onChange={this.handleChange('currency')}
-                  SelectProps={{
-                    native: true,
-                    MenuProps: {
-                      className: classes.menu,
-                    },
-                  }}
-                  margin="normal"
-                >
-                  {currencies.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
-                <TextField
-                  id="standard-select-currency-native"
-                  select
-                  label="Class"
-                  className={classes.textField}
-                  value={this.state.currency}
-                  onChange={this.handleChange('currency')}
-                  SelectProps={{
-                    native: true,
-                    MenuProps: {
-                      className: classes.menu,
-                    },
-                  }}
-                  margin="normal"
-                >
-                  {currencies.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
-                <TextField
-                  id="standard-select-currency-native"
-                  select
-                  label="Band"
-                  className={classes.textField}
-                  value={this.state.currency}
-                  onChange={this.handleChange('currency')}
-                  SelectProps={{
-                    native: true,
-                    MenuProps: {
-                      className: classes.menu,
-                    },
-                  }}
-                  margin="normal"
-                >
-                  {currencies.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
-            </form>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
+        <Toolbar>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="release">Release</InputLabel>
+            <Select
+              className={classes.select}
+              value={this.state.release}
+              onChange={this.handleChangeRelease}
+              inputProps={{
+                name: 'Release',
+                id: 'release',
+              }}
             >
-              Clear Filter
-            </Button>
-            <InputBase placeholder="Search" />
-            <IconButton className={classes.iconButton} aria-label="Search">
-              <Icon className={classes.icon} color="primary">
-                search
-              </Icon>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
+              <MenuItem value="">
+                <em>Any</em>
+              </MenuItem>
+
+              {releases.map((option, key) => (
+                <MenuItem key={key} value={option.tagId}>
+                  {option.releaseDisplayName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="dataset">Dataset</InputLabel>
+            <Select
+              className={classes.select}
+              value={this.state.dataset}
+              onChange={this.handleChangeDataset}
+              inputProps={{
+                name: 'Dataset',
+                id: 'dataset',
+              }}
+              disabled={datasets.length > 0 ? false : true}
+            >
+              <MenuItem value="">
+                <em>Any</em>
+              </MenuItem>
+
+              {datasets.map((option, key) => (
+                <MenuItem key={key} value={option.fieldId}>
+                  {option.displayName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="dataset">Type</InputLabel>
+            <Select
+              className={classes.select}
+              value={this.state.type}
+              onChange={this.handleChange}
+              inputProps={{
+                name: 'Type',
+                id: 'type',
+              }}
+              disabled={datasets.length > 0 ? false : true}
+            >
+              <MenuItem value="">
+                <em>Type</em>
+              </MenuItem>
+
+              {datasets.map((option, key) => (
+                <MenuItem key={key} value={option.fieldId}>
+                  {option.displayName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="classes">Classes</InputLabel>
+            <Select
+              className={classes.select}
+              value={this.state.class}
+              onChange={this.handleChangeClass}
+              inputProps={{
+                name: 'Class',
+                id: 'class',
+              }}
+            >
+              <MenuItem value="">
+                <em>Class</em>
+              </MenuItem>
+
+              {classesInput.map((option, key) => (
+                <MenuItem key={key} value={option.displayName}>
+                  {option.displayName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="band">Band</InputLabel>
+            <Select
+              className={classes.select}
+              value={this.state.band}
+              onChange={this.handleChangeDataset}
+              inputProps={{
+                name: 'Band',
+                id: 'Band',
+              }}
+            >
+              <MenuItem value="">
+                <em>Band</em>
+              </MenuItem>
+
+              {datasets.map((option, key) => (
+                <MenuItem key={key} value={option.fieldId}>
+                  {option.displayName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={this.onClearSelects}
+          >
+            Clear Filter
+          </Button>
+          <InputBase placeholder="Search" />
+          <IconButton className={classes.iconButton} aria-label="Search">
+            <Icon className={classes.icon} color="primary">
+              search
+            </Icon>
+          </IconButton>
+        </Toolbar>
       </React.Fragment>
     );
   }

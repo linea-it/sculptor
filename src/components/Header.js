@@ -33,9 +33,9 @@ function Header(props) {
         <AppBar position="static">
           <Toolbar>
             <IconButton color="inherit" aria-label="Menu">
-              <img src={logo} />
+              <img alt="logo DES" src={logo} />
             </IconButton>
-            <Typography classesName={classes.grow} variant="h6" color="inherit">
+            <Typography className={classes.grow} variant="h6" color="inherit">
               Science Products
             </Typography>
             {/* AppBar API: {API_URL} */}
