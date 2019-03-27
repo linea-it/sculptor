@@ -29,36 +29,28 @@ const styles = {
 };
 
 class TableDX extends React.Component {
+  style = {
+    loading: true,
+  };
+
   render() {
     const classes = this.props;
+    const data = this.props;
     return (
       <React.Fragment>
-        <Card className={classes.card}>
-          {/* <Paper classes={classes.content}> */}
+        <Card>
           <Grid
-            rows={[
-              {
-                release: 2221,
-                dataset: 'DevExtreme',
-                type: 'lorem',
-                class: 'ipsum',
-                productName: 'eadas',
-                proctType: 'fsfs',
-                processID: '39242',
-                owner: 'DevExpress',
-                band: 'i',
-                date: '21/21/2112',
-              },
-              { id: 1, product: 'DevExtreme Reactive', owner: 'DevExpress' },
-            ]}
+            rows={data.data.map(el => {
+              return el;
+            })}
             columns={[
-              { name: 'release', title: 'Release' },
-              { name: 'dataset', title: 'Dataset' },
-              { name: 'type', title: 'Type' },
-              { name: 'class', title: 'Class' },
-              { name: 'productName', title: 'Product Name' },
+              { name: 'releaseDisplayName', title: 'Release' },
+              { name: 'field', title: 'Dataset' },
+              { name: 'dataType', title: 'Type' },
+              { name: 'Class', title: 'Class' },
+              { name: 'displayName', title: 'Product Name' },
               { name: 'productType', title: 'Product Type' },
-              { name: 'processID', title: 'Process ID' },
+              { name: 'processId', title: 'Process ID' },
               { name: 'owner', title: 'Owner' },
               { name: 'band', title: 'Band' },
               { name: 'date', title: 'Date' },

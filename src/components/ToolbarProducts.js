@@ -45,6 +45,9 @@ class ToolbarProducts extends React.Component {
     type: '',
     class: '',
     band: '',
+    releaseName: '',
+
+    searchs: [],
   };
 
   onClearSelects = () => {
@@ -58,7 +61,7 @@ class ToolbarProducts extends React.Component {
   };
   componentDidMount() {
     this.loadReleases();
-    this.loadClass();
+    this.loadType();
   }
 
   loadReleases = async () => {
@@ -69,23 +72,59 @@ class ToolbarProducts extends React.Component {
     });
   };
 
-  handleChangeRelease = event => {
+  handleChangeRelease = async event => {
     const release = event.target.value;
 
-    this.setState(
-      {
-        release: release,
-      },
-      () => {
-        this.loadDataset(release);
-      }
+    const dataReleases = await CentaurusApi.getAllrelease();
+    const releaseName = dataReleases.releaseTagList.edges.map(
+      edge => edge.node
     );
+    const releaseNamePop = releaseName.pop();
+    const name = releaseNamePop.name;
+    const tagId = releaseNamePop.tagId;
+
+    if (release) {
+      if (release === tagId) {
+        this.setState(
+          {
+            releaseName: name,
+            release: release,
+          },
+          () => {
+            this.props.handleSearch({
+              search: '',
+              releaseName: name,
+            });
+            this.loadDataset(release);
+          }
+        );
+      }
+    } else {
+      this.setState(
+        {
+          releaseName: name,
+          release: release,
+          dataset: '',
+        },
+
+        () => {
+          this.props.handleSearch({
+            search: '',
+            releaseName: name,
+          });
+        }
+      );
+    }
+  };
+
+  handleChangeSearch = event => {
+    const search = event.target.value;
+    this.props.handleSearch({ search: search, releaseName: '', fieldName: '' });
   };
 
   loadDataset = async tagId => {
     const dDataset = await CentaurusApi.getDataset(tagId);
     const datasets = dDataset.fieldsByTagId;
-    console.log('Datasets: ', datasets);
     this.setState({
       datasets: datasets,
     });
@@ -97,10 +136,20 @@ class ToolbarProducts extends React.Component {
 
   handleChangeDataset = event => {
     const dataset = event.target.value;
-
-    this.setState({
-      dataset: dataset,
-    });
+    if (this.state.release !== '') {
+      this.setState(
+        {
+          dataset: dataset,
+        },
+        () => {
+          this.props.handleSearch({
+            search: '',
+            releaseName: '',
+            fieldName: dataset,
+          });
+        }
+      );
+    }
   };
 
   loadClass = async () => {
@@ -119,6 +168,27 @@ class ToolbarProducts extends React.Component {
     this.setState({
       class: classe,
     });
+  };
+
+  loadType = async () => {
+    const dataType = await CentaurusApi.getAllType();
+    const productType = dataType.productTypeList.edges.map(edge => edge.node);
+    this.setState({
+      types: productType,
+    });
+  };
+
+  handleChangeType = event => {
+    const type = event.target.value;
+
+    this.setState(
+      {
+        type: type,
+      },
+      () => {
+        this.loadClass();
+      }
+    );
   };
 
   render() {
@@ -178,19 +248,19 @@ class ToolbarProducts extends React.Component {
             <Select
               className={classes.select}
               value={this.state.type}
-              onChange={this.handleChange}
+              onChange={this.handleChangeType}
               inputProps={{
                 name: 'Type',
                 id: 'type',
               }}
-              disabled={datasets.length > 0 ? false : true}
+              disabled={classesInput.length > 0 ? false : true}
             >
               <MenuItem value="">
                 <em>Type</em>
               </MenuItem>
 
-              {datasets.map((option, key) => (
-                <MenuItem key={key} value={option.fieldId}>
+              {types.map((option, key) => (
+                <MenuItem key={key} value={option.typeName}>
                   {option.displayName}
                 </MenuItem>
               ))}
@@ -206,6 +276,7 @@ class ToolbarProducts extends React.Component {
                 name: 'Class',
                 id: 'class',
               }}
+              disabled={classesInput.length > 0 ? false : true}
             >
               <MenuItem value="">
                 <em>Class</em>
@@ -228,6 +299,7 @@ class ToolbarProducts extends React.Component {
                 name: 'Band',
                 id: 'Band',
               }}
+              disabled={bands.length > 0 ? false : true}
             >
               <MenuItem value="">
                 <em>Band</em>
@@ -249,7 +321,7 @@ class ToolbarProducts extends React.Component {
           >
             Clear Filter
           </Button>
-          <InputBase placeholder="Search" />
+          <InputBase onChange={this.handleChangeSearch} placeholder="Search" />
           <IconButton className={classes.iconButton} aria-label="Search">
             <Icon className={classes.icon} color="primary">
               search

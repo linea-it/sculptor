@@ -28,7 +28,6 @@ export default class CentaurusApi {
         }
       }
       `);
-      console.log(releases);
       return releases;
     } catch (e) {
       return null;
@@ -67,8 +66,80 @@ export default class CentaurusApi {
       }
       
         `);
-      console.log(productClass);
       return productClass;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static async getAllType() {
+    try {
+      const productType = await client.query(`
+      query type {
+        productTypeList {
+          edges {
+            node {
+              id
+              typeName
+              displayName
+            }
+          }
+        }
+      }
+      
+        `);
+      return productType;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static async getSearch({ search, releaseName }) {
+    try {
+      const release = releaseName !== null ? releaseName : '';
+      const data = await client.query(`
+      query search {
+        productsList(filter: "${search}", releaseName:"${release}" ) {
+          edges {
+            node {
+              productId
+              displayName
+              dataType
+              processId
+              tableId
+              dataType
+              Class {
+                id
+                displayName
+              }
+              process {
+                startTime,
+                session {
+                  id
+                  user {
+                    id
+                    userName
+                  }
+                }
+              fields {
+                edges {
+                  node {
+                    id
+                      displayName
+                      releaseTag {
+                        id
+                        releaseDisplayName
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      `);
+      return data;
     } catch (e) {
       return null;
     }
