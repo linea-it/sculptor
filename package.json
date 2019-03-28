@@ -47,7 +47,7 @@
   },
   "jest": {
     "moduleNameMapper": {
-      ".+\\.(svg|css)$": "jest-transform-stub"
+      ".+\\.(svg|css|png)$": "jest-transform-stub"
     }
   },
   "browserslist": [

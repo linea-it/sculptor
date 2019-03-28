@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-// import logo from 'logo.png';
 import Toolbar from '@material-ui/core/Toolbar';
 import logo from '../assets/img/icon-des.png';
 import IconButton from '@material-ui/core/IconButton';
@@ -38,7 +37,6 @@ function Header(props) {
             <Typography className={classes.grow} variant="h6" color="inherit">
               Science Products
             </Typography>
-            {/* AppBar API: {API_URL} */}
           </Toolbar>
         </AppBar>
       </div>
@@ -48,7 +46,6 @@ function Header(props) {
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
-  // logo: prototype.isRequired,
 };
 
 export default withStyles(styles)(Header);

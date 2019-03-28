@@ -6,11 +6,6 @@ import TableDX from '../../components/TableDX';
 import { Grid } from '@material-ui/core';
 import CentaurusApi from './../../api/api';
 
-// const API_URL =
-//   process.env.NODE_ENV === 'production'
-//     ? window._env_.REACT_APP_API_URL
-//     : process.env.REACT_APP_API_URL;
-
 class Home extends React.Component {
   state = {
     data: [],
@@ -21,7 +16,7 @@ class Home extends React.Component {
   };
 
   loadData = async ({ search, releaseName }) => {
-    const dataSearch = await CentaurusApi.getSearch({
+    const dataSearch = await CentaurusApi.searchProductsAllFilters({
       search,
       releaseName,
     });
@@ -58,7 +53,7 @@ class Home extends React.Component {
         });
       } else {
         this.setState({
-          data: '',
+          data: [],
         });
       }
     }

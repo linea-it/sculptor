@@ -45,7 +45,6 @@ export default class CentaurusApi {
             }
           }
         `);
-      console.log(datasets);
       return datasets;
     } catch (e) {
       return null;
@@ -94,7 +93,7 @@ export default class CentaurusApi {
     }
   }
 
-  static async getSearch({ search, releaseName }) {
+  static async searchProductsAllFilters({ search, releaseName }) {
     try {
       const release = releaseName !== null ? releaseName : '';
       const data = await client.query(`

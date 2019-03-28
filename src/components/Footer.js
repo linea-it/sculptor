@@ -37,7 +37,6 @@ function Footer(props) {
           <Typography color="inherit">Powered by </Typography>
           <CardMedia className={classes.media} image={logo} title="LIneA" />
         </Toolbar>
-        {/* <img src={logo} /> */}
       </AppBar>
     </React.Fragment>
   );
@@ -45,7 +44,6 @@ function Footer(props) {
 
 Footer.propTypes = {
   classes: PropTypes.object.isRequired,
-  // logo: prototype.isRequired,
 };
 
 export default withStyles(styles)(Footer);
