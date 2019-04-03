@@ -11,15 +11,34 @@ class Home extends React.Component {
     data: [],
   };
 
-  handleSearch = ({ search, releaseName }) => {
-    this.loadData({ search, releaseName });
+  clearData = () => {
+    this.setState({
+      data: [],
+    });
+    return;
   };
 
-  loadData = async ({ search, releaseName }) => {
-    const dataSearch = await CentaurusApi.searchProductsAllFilters({
-      search,
-      releaseName,
-    });
+  handleSearch = search => {
+    if (search) {
+      const id = 'search';
+      this.loadData({ search, id });
+    } else {
+      this.clearData();
+    }
+  };
+
+  handleFilter = filter => {
+    if (filter) {
+      const id = 'filter';
+      this.loadData({ filter, id });
+    } else {
+      this.clearData();
+    }
+  };
+
+  loadData = async value => {
+    this.clearData();
+    const dataSearch = await CentaurusApi.searchProductsAllFilters(value);
     if (dataSearch) {
       const data = dataSearch.productsList.edges.map(edge => {
         const fields = edge.node.process.fields.edges;
@@ -47,15 +66,9 @@ class Home extends React.Component {
         };
       });
 
-      if (data) {
-        this.setState({
-          data: data,
-        });
-      } else {
-        this.setState({
-          data: [],
-        });
-      }
+      this.setState({
+        data: data,
+      });
     }
   };
 
@@ -66,6 +79,7 @@ class Home extends React.Component {
         <ToolbarProducts
           handleSearch={this.handleSearch}
           handleFilter={this.handleFilter}
+          clearData={this.clearData}
         />
         <Grid container spacing={16}>
           <Grid item xs={12}>

@@ -40,9 +40,13 @@ class TableDX extends React.Component {
       <React.Fragment>
         <Card>
           <Grid
-            rows={data.data.map(el => {
-              return el;
-            })}
+            rows={
+              data
+                ? data.data.map(el => {
+                    return el;
+                  })
+                : []
+            }
             columns={[
               { name: 'releaseDisplayName', title: 'Release' },
               { name: 'field', title: 'Dataset' },

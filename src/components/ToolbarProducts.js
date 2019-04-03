@@ -46,18 +46,24 @@ class ToolbarProducts extends React.Component {
     class: '',
     band: '',
     releaseName: '',
-
+    search: '',
     searchs: [],
   };
 
   onClearSelects = () => {
-    this.setState({
-      band: '',
-      release: '',
-      dataset: '',
-      type: '',
-      class: '',
-    });
+    this.setState(
+      {
+        band: '',
+        release: '',
+        dataset: '',
+        type: '',
+        class: '',
+        search: '',
+      },
+      () => {
+        this.props.clearData();
+      }
+    );
   };
   componentDidMount() {
     this.loadReleases();
@@ -91,10 +97,7 @@ class ToolbarProducts extends React.Component {
             release: release,
           },
           () => {
-            this.props.handleSearch({
-              search: '',
-              releaseName: name,
-            });
+            this.props.handleFilter(name);
             this.loadDataset(release);
           }
         );
@@ -108,10 +111,7 @@ class ToolbarProducts extends React.Component {
         },
 
         () => {
-          this.props.handleSearch({
-            search: '',
-            releaseName: name,
-          });
+          this.props.handleFilter(name);
         }
       );
     }
@@ -119,7 +119,8 @@ class ToolbarProducts extends React.Component {
 
   handleChangeSearch = event => {
     const search = event.target.value;
-    this.props.handleSearch({ search: search, releaseName: '', fieldName: '' });
+    this.setState({ search: search });
+    this.props.handleSearch(search);
   };
 
   loadDataset = async tagId => {
@@ -321,7 +322,11 @@ class ToolbarProducts extends React.Component {
           >
             Clear Filter
           </Button>
-          <InputBase onChange={this.handleChangeSearch} placeholder="Search" />
+          <InputBase
+            value={this.state.search}
+            onChange={this.handleChangeSearch}
+            placeholder="Search"
+          />
           <IconButton className={classes.iconButton} aria-label="Search">
             <Icon className={classes.icon} color="primary">
               search

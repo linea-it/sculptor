@@ -93,12 +93,24 @@ export default class CentaurusApi {
     }
   }
 
-  static async searchProductsAllFilters({ search, releaseName }) {
+  static async searchProductsAllFilters(value) {
+    let releaseName, filter;
+    let queryValue = '';
+
+    if (value.id === 'search') {
+      queryValue = value.search;
+      releaseName = '';
+      filter = queryValue;
+    } else {
+      queryValue = value.filter;
+      releaseName = queryValue;
+      filter = '';
+    }
     try {
-      const release = releaseName !== null ? releaseName : '';
+      // const query = queryValue !== null ? queryValue : '';
       const data = await client.query(`
       query search {
-        productsList(filter: "${search}", releaseName:"${release}" ) {
+        productsList(filter: "${filter}", releaseName:"${releaseName}" ) {
           edges {
             node {
               productId
