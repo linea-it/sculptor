@@ -107,7 +107,6 @@ export default class CentaurusApi {
       filter = '';
     }
     try {
-      // const query = queryValue !== null ? queryValue : '';
       const data = await client.query(`
       query search {
         productsList(filter: "${filter}", releaseName:"${releaseName}" ) {
@@ -119,11 +118,16 @@ export default class CentaurusApi {
               processId
               tableId
               dataType
+              table {
+                id
+               dachsUrl
+              }
               Class {
                 id
                 displayName
               }
               process {
+                productLog
                 startTime,
                 session {
                   id

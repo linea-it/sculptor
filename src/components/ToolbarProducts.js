@@ -77,44 +77,10 @@ class ToolbarProducts extends React.Component {
       releases: releases,
     });
   };
-
-  handleChangeRelease = async event => {
-    const release = event.target.value;
-
-    const dataReleases = await CentaurusApi.getAllrelease();
-    const releaseName = dataReleases.releaseTagList.edges.map(
-      edge => edge.node
-    );
-    const releaseNamePop = releaseName.pop();
-    const name = releaseNamePop.name;
-    const tagId = releaseNamePop.tagId;
-
-    if (release) {
-      if (release === tagId) {
-        this.setState(
-          {
-            releaseName: name,
-            release: release,
-          },
-          () => {
-            this.props.handleFilter(name);
-            this.loadDataset(release);
-          }
-        );
-      }
-    } else {
-      this.setState(
-        {
-          releaseName: name,
-          release: release,
-          dataset: '',
-        },
-
-        () => {
-          this.props.handleFilter(name);
-        }
-      );
-    }
+  handleChangeRelease = event => {
+    const displayName = event.target.Relname;
+    const tagId = event.target.value;
+    this.props.handleFilter(tagId, displayName);
   };
 
   handleChangeSearch = event => {
@@ -214,7 +180,7 @@ class ToolbarProducts extends React.Component {
               </MenuItem>
 
               {releases.map((option, key) => (
-                <MenuItem key={key} value={option.tagId}>
+                <MenuItem key={key} value={option.tagId} Relname={option.releaseDisplayName}>
                   {option.releaseDisplayName}
                 </MenuItem>
               ))}

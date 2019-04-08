@@ -2,7 +2,7 @@ import React from 'react';
 import Footer from '../../components/Footer';
 import ToolbarProducts from '../../components/ToolbarProducts';
 import Header from '../../components/Header';
-import TableDX from '../../components/TableDX';
+import TableProducts from '../../components/TableProducts';
 import { Grid } from '@material-ui/core';
 import CentaurusApi from './../../api/api';
 
@@ -27,10 +27,10 @@ class Home extends React.Component {
     }
   };
 
-  handleFilter = filter => {
+  handleFilter = (filter, displayName) => {
     if (filter) {
       const id = 'filter';
-      this.loadData({ filter, id });
+      this.loadData({ filter, id, displayName });
     } else {
       this.clearData();
     }
@@ -63,9 +63,10 @@ class Home extends React.Component {
           Class: edge.node.Class.displayName,
           owner: owner.user.userName,
           date: dateTime,
+          productLog: edge.node.process.productLog,
+          daCHs: edge.node.table.dachsUrl,
         };
       });
-
       this.setState({
         data: data,
       });
@@ -83,7 +84,7 @@ class Home extends React.Component {
         />
         <Grid container spacing={16}>
           <Grid item xs={12}>
-            <TableDX data={this.state.data} />
+            <TableProducts rows={this.state.data} />
           </Grid>
         </Grid>
         <Footer />
