@@ -6,7 +6,7 @@ import logo from './../../src/assets/img/linea-logo-mini.png';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Typography, CardMedia } from '@material-ui/core';
 
-const styles = theme => ({
+const styles = () => ({
   appBar: {
     top: 'auto',
     bottom: 0,

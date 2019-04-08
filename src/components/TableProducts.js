@@ -1,20 +1,20 @@
-import PropTypes from "prop-types";
-import React from "react";
+import PropTypes from 'prop-types';
+import React from 'react';
 import {
   Grid,
   Table,
   PagingPanel,
-  TableHeaderRow
-} from "@devexpress/dx-react-grid-material-ui";
+  TableHeaderRow,
+} from '@devexpress/dx-react-grid-material-ui';
 import {
   PagingState,
   IntegratedPaging,
-  EditingState
-} from "@devexpress/dx-react-grid";
-import Card from "@material-ui/core/Card";
-import { ButtonBase } from "@material-ui/core";
-import Icon from "@material-ui/core/Icon";
-import { isEmpty, isUndefined } from "lodash";
+  EditingState,
+} from '@devexpress/dx-react-grid';
+import Card from '@material-ui/core/Card';
+import { ButtonBase } from '@material-ui/core';
+import Icon from '@material-ui/core/Icon';
+import { isEmpty, isUndefined } from 'lodash';
 
 class Exception extends Error {
   constructor(msg) {
@@ -25,7 +25,7 @@ class Exception extends Error {
 class TableProducts extends React.Component {
   Error = new Exception();
   style = {
-    loading: true
+    loading: true,
   };
 
   iconLog = value => {
@@ -37,8 +37,8 @@ class TableProducts extends React.Component {
           <ButtonBase
             onClick={() => {
               window.open(value);
-            }
-          }> 
+            }}
+          >
             <Icon>link</Icon>
           </ButtonBase>
         </div>
@@ -55,8 +55,8 @@ class TableProducts extends React.Component {
           <ButtonBase
             onClick={() => {
               window.open(value);
-            }
-          }> 
+            }}
+          >
             <Icon>storage</Icon>
           </ButtonBase>
         </div>
@@ -67,11 +67,10 @@ class TableProducts extends React.Component {
   render() {
     const { rows } = this.props;
     if (!rows) {
-      throw new Exception("There was a problem with the request");
+      throw new Exception('There was a problem with the request');
     }
 
     rows.map(el => {
-      console.log(el);
       el.log = this.iconLog(el.productLog);
       el.storage = this.iconStorage(el.daCHs);
     });
@@ -82,18 +81,18 @@ class TableProducts extends React.Component {
           <Grid
             rows={rows}
             columns={[
-              { name: "releaseDisplayName", title: "Release" },
-              { name: "field", title: "Dataset" },
-              { name: "dataType", title: "Type" },
-              { name: "Class", title: "Class" },
-              { name: "displayName", title: "Product Name" },
-              { name: "productType", title: "Product Type" },
-              { name: "processId", title: "Process ID" },
-              { name: "owner", title: "Owner" },
-              { name: "band", title: "Band" },
-              { name: "date", title: "Date" },
-              { name: "log", title: "Log" },
-              { name: "storage", title: "Storage" }
+              { name: 'releaseDisplayName', title: 'Release' },
+              { name: 'field', title: 'Dataset' },
+              { name: 'dataType', title: 'Type' },
+              { name: 'Class', title: 'Class' },
+              { name: 'displayName', title: 'Product Name' },
+              { name: 'productType', title: 'Product Type' },
+              { name: 'processId', title: 'Process ID' },
+              { name: 'owner', title: 'Owner' },
+              { name: 'band', title: 'Band' },
+              { name: 'date', title: 'Date' },
+              { name: 'log', title: 'Log' },
+              { name: 'storage', title: 'Storage' },
             ]}
           >
             <EditingState />
@@ -110,7 +109,6 @@ class TableProducts extends React.Component {
 }
 
 TableProducts.propTypes = {
-  rows: PropTypes.array.isRequired
+  rows: PropTypes.object.isRequired,
 };
-
 export default TableProducts;

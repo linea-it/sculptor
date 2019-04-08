@@ -180,7 +180,11 @@ class ToolbarProducts extends React.Component {
               </MenuItem>
 
               {releases.map((option, key) => (
-                <MenuItem key={key} value={option.tagId} Relname={option.releaseDisplayName}>
+                <MenuItem
+                  key={key}
+                  value={option.tagId}
+                  Relname={option.releaseDisplayName}
+                >
                   {option.releaseDisplayName}
                 </MenuItem>
               ))}
@@ -306,6 +310,9 @@ class ToolbarProducts extends React.Component {
 
 ToolbarProducts.propTypes = {
   classes: PropTypes.object.isRequired,
+  handleSearch: PropTypes.func,
+  handleFilter: PropTypes.func,
+  clearData: PropTypes.func,
 };
 
 export default withStyles(styles)(ToolbarProducts);
