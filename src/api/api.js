@@ -10,9 +10,52 @@ const apiUrl =
 const client = new Lokka({
   transport: new Transport(apiUrl),
 });
+const query = ` edges {
+  node {
+    productId
+    displayName
+    dataType
+    processId
+    tableId
+    table {
+      id
+      map {
+        id
+        filter
+      }
+    }
+    Class {
+      id
+      displayName
+    }
+    process {
+      startTime,
+      session {
+        id
+        user {
+          id
+          userName
+        }
+      }
+    fields {
+      edges {
+        node {
+          id
+            displayName
+            releaseTag {
+              id
+              releaseDisplayName
+            }
+          }
+        }
+      }
+    }
+  }
+}
+}`;
 
 export default class CentaurusApi {
-  static async getAllrelease() {
+  static async getRelease() {
     try {
       const releases = await client.query(`
       query realease {
@@ -34,6 +77,16 @@ export default class CentaurusApi {
     }
   }
 
+  static async searchRelease(value) { 
+    try {
+      const data = await client.query(`query search {
+        productsList(first:10, tagId:${value}) {${query}}`);
+        return data;
+    } catch(e) {
+      return null;
+    };
+  };
+
   static async getDataset(tagId) {
     try {
       const datasets = await client.query(`
@@ -51,27 +104,18 @@ export default class CentaurusApi {
     }
   }
 
-  static async getAllClass() {
+  static async searchDataset(value) { 
     try {
-      const productClass = await client.query(`
-      query productClass {
-        productClassList {
-          edges {
-            node {
-              displayName
-            }
-          }
-        }
-      }
-      
-        `);
-      return productClass;
-    } catch (e) {
+      const data = await client.query(`query search {
+        productsList(first:10, fieldId:${value}) {${query}}`);
+        return data;
+    } catch(e) {
       return null;
-    }
-  }
+    };
+  };
 
-  static async getAllType() {
+
+  static async getType() {
     try {
       const productType = await client.query(`
       query type {
@@ -79,7 +123,7 @@ export default class CentaurusApi {
           edges {
             node {
               id
-              typeName
+              typeId
               displayName
             }
           }
@@ -93,66 +137,88 @@ export default class CentaurusApi {
     }
   }
 
-  static async searchProductsAllFilters(value) {
-    let releaseName, filter;
-    let queryValue = '';
-
-    if (value.id === 'search') {
-      queryValue = value.search;
-      releaseName = '';
-      filter = queryValue;
-    } else {
-      queryValue = value.filter;
-      releaseName = queryValue;
-      filter = '';
-    }
+  static async searchType(value) { 
     try {
-      // const query = queryValue !== null ? queryValue : '';
-      const data = await client.query(`
-      query search {
-        productsList(filter: "${filter}", releaseName:"${releaseName}" ) {
+      const data = await client.query(`query search {
+        productsList(first:10, typeId:${value}) {${query}}`);
+        return data;
+    } catch(e) {
+      return null;
+    }; 
+  };
+
+  static async getClasses() {
+    try {
+      const productClass = await client.query(`
+      query productClass {
+        productClassList {
           edges {
             node {
-              productId
               displayName
-              dataType
-              processId
-              tableId
-              dataType
-              Class {
-                id
-                displayName
-              }
-              process {
-                startTime,
-                session {
-                  id
-                  user {
-                    id
-                    userName
-                  }
-                }
-              fields {
-                edges {
-                  node {
-                    id
-                      displayName
-                      releaseTag {
-                        id
-                        releaseDisplayName
-                      }
-                    }
-                  }
-                }
-              }
+              classId
             }
           }
         }
       }
-      `);
-      return data;
+      
+        `);
+      return productClass;
     } catch (e) {
       return null;
     }
   }
+
+  static async searchClasses(value) { 
+    try {
+      const data = await client.query(`query search {
+        productsList(first:10, classId:${value}) {${query}}`);
+        return data;
+    } catch(e) {
+      return null;
+    }; 
+  };
+
+
+  static async getBand() {
+    try {
+      const bandClass = await client.query(`
+      query band {
+        filtersList {
+          edges {
+            node {
+              id
+              filter
+            }
+          }
+        }
+      }
+    `); 
+    return bandClass;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static async searchBand(value) { 
+    try {
+      const data = await client.query(`query search {
+        productsList(first:10, band:"${value}") {${query}}`);
+        return data;
+    } catch(e) {
+      return null;
+    }; 
+  };
+
+  static async searchInput(value) { 
+    try {
+      const data = await client.query(`query search {
+        productsList(filter:"${value}") {${query}}`);
+        return data;
+    } catch(e) {
+      return null;
+    }; 
+  };
 }
+
+
+

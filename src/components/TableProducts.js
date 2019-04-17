@@ -28,7 +28,7 @@ const styles = {
   },
 };
 
-class TableDX extends React.Component {
+class TableProducts extends React.Component {
   style = {
     loading: true,
   };
@@ -72,4 +72,4 @@ class TableDX extends React.Component {
   }
 }
 
-export default withStyles(styles)(TableDX);
+export default withStyles(styles)(TableProducts);

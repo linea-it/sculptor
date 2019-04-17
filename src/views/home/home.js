@@ -2,7 +2,7 @@ import React from 'react';
 import Footer from '../../components/Footer';
 import ToolbarProducts from '../../components/ToolbarProducts';
 import Header from '../../components/Header';
-import TableDX from '../../components/TableDX';
+import TableProducts from '../../components/TableProducts';
 import { Grid } from '@material-ui/core';
 import CentaurusApi from './../../api/api';
 
@@ -18,27 +18,61 @@ class Home extends React.Component {
     return;
   };
 
-  handleSearch = search => {
-    if (search) {
-      const id = 'search';
-      this.loadData({ search, id });
+  handleRelease = async value => {
+    const dataSearch = await CentaurusApi.searchRelease(value);
+    if (dataSearch) {
+      this.loadData(dataSearch);
+    } else {
+      this.clearData();
+    }
+  };
+  handleDataSet = async value => {
+    const dataSearch = await CentaurusApi.searchDataset(value);
+    if (dataSearch) {
+      this.loadData(dataSearch);
     } else {
       this.clearData();
     }
   };
 
-  handleFilter = filter => {
-    if (filter) {
-      const id = 'filter';
-      this.loadData({ filter, id });
+  handleType =  async value => {
+    const dataSearch = await CentaurusApi.searchType(value);
+    if (dataSearch) {
+      this.loadData(dataSearch);
     } else {
       this.clearData();
     }
   };
 
-  loadData = async value => {
+  handleClasses =  async value => {
+    const dataSearch = await CentaurusApi.searchClasses(value);
+    if (dataSearch) {
+      this.loadData(dataSearch);
+    } else {
+      this.clearData();
+    }
+  };
+
+  handleBand =  async value => {
+    const dataSearch = await CentaurusApi.searchBand(value);
+    if (dataSearch) {
+      this.loadData(dataSearch);
+    } else {
+      this.clearData();
+    }
+  };
+
+  handleSearch = async value => {
+    const dataSearch = await CentaurusApi.searchInput(value);
+    if (dataSearch) {
+      this.loadData(dataSearch);
+    } else {
+      this.clearData();
+    }
+  };
+
+  loadData = dataSearch => {
     this.clearData();
-    const dataSearch = await CentaurusApi.searchProductsAllFilters(value);
     if (dataSearch) {
       const data = dataSearch.productsList.edges.map(edge => {
         const fields = edge.node.process.fields.edges;
@@ -53,7 +87,15 @@ class Home extends React.Component {
         }
         const owner = edge.node.process.session;
         const dateTime = edge.node.process.startTime;
-
+        
+        const band = edge.node.table.map.filter;
+        //const bandName = null;
+        // if ((band.length > 0) || band === null) {
+        //   bandName = '-';
+        // } else {
+        //   bandName = band;
+        // }
+        console.log('band', band);
         return {
           displayName: edge.node.displayName,
           dataType: edge.node.dataType,
@@ -63,6 +105,7 @@ class Home extends React.Component {
           Class: edge.node.Class.displayName,
           owner: owner.user.userName,
           date: dateTime,
+          band: 'r',
         };
       });
 
@@ -77,13 +120,17 @@ class Home extends React.Component {
       <div>
         <Header />
         <ToolbarProducts
+          handleRelease={this.handleRelease}
+          handleDataset={this.handleDataSet}
+          handleType={this.handleType}
+          handleClasses={this.handleClasses}
+          handleBand={this.handleBand}
           handleSearch={this.handleSearch}
-          handleFilter={this.handleFilter}
           clearData={this.clearData}
         />
         <Grid container spacing={16}>
           <Grid item xs={12}>
-            <TableDX data={this.state.data} />
+            <TableProducts data={this.state.data} />
           </Grid>
         </Grid>
         <Footer />
