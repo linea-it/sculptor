@@ -9,6 +9,8 @@ import CentaurusApi from './../../api/api';
 class Home extends React.Component {
   state = {
     data: [],
+    Release: null,
+    Dataset: null,
   };
 
   clearData = () => {
@@ -18,63 +20,47 @@ class Home extends React.Component {
     return;
   };
 
-  handleRelease = async value => {
-    const dataSearch = await CentaurusApi.searchRelease(value);
-    if (dataSearch) {
-      this.loadData(dataSearch);
-    } else {
-      this.clearData();
-    }
-  };
-  handleDataSet = async value => {
-    const dataSearch = await CentaurusApi.searchDataset(value);
-    if (dataSearch) {
-      this.loadData(dataSearch);
-    } else {
-      this.clearData();
-    }
+  clearInputs = () => {
+    this.setState({
+      Release: null,
+      Dataset: null,
+    });
+    return;
   };
 
-  handleType =  async value => {
-    const dataSearch = await CentaurusApi.searchType(value);
-    if (dataSearch) {
-      this.loadData(dataSearch);
-    } else {
-      this.clearData();
+  handleFilterSelected = async ev => {
+    console.log('HandleFilterSelected:', ev);
+
+    if(ev.target.name == 'Release'){
+      this.setState({
+        Release: ev.target.value,
+      }, () => 
+        this.loadData(ev.target.value)
+      );  
     }
+
+    if (ev.target.name == 'Dataset') {
+      this.setState({
+        Dataset: ev.target.value,
+      }, () => 
+        this.loadData(ev.target.value)
+      );
+    }
+
+    this.setState({
+      inputs: ev.target.name,
+    });
+
+    // ev ? this.loadData(ev.target.value) : this.clearData();
   };
 
-  handleClasses =  async value => {
-    const dataSearch = await CentaurusApi.searchClasses(value);
+  loadData = async dataSearch => {
+    this.clearInputs();
+    console.log('LoadData:', dataSearch);
     if (dataSearch) {
-      this.loadData(dataSearch);
-    } else {
-      this.clearData();
-    }
-  };
-
-  handleBand =  async value => {
-    const dataSearch = await CentaurusApi.searchBand(value);
-    if (dataSearch) {
-      this.loadData(dataSearch);
-    } else {
-      this.clearData();
-    }
-  };
-
-  handleSearch = async value => {
-    const dataSearch = await CentaurusApi.searchInput(value);
-    if (dataSearch) {
-      this.loadData(dataSearch);
-    } else {
-      this.clearData();
-    }
-  };
-
-  loadData = dataSearch => {
-    this.clearData();
-    if (dataSearch) {
-      const data = dataSearch.productsList.edges.map(edge => {
+      const search = await CentaurusApi.identifyID(dataSearch);
+      console.log('search for data:', search)
+      const data = search.productsList.edges.map(edge => {
         const fields = edge.node.process.fields.edges;
         let fieldname = null;
         if (fields.length > 0) {
@@ -88,14 +74,14 @@ class Home extends React.Component {
         const owner = edge.node.process.session;
         const dateTime = edge.node.process.startTime;
         
-        const band = edge.node.table.map.filter;
+        // const band = edge.node.table.map.filter;
         //const bandName = null;
         // if ((band.length > 0) || band === null) {
         //   bandName = '-';
         // } else {
         //   bandName = band;
         // }
-        console.log('band', band);
+        // console.log('band', band);
         return {
           displayName: edge.node.displayName,
           dataType: edge.node.dataType,
@@ -105,7 +91,7 @@ class Home extends React.Component {
           Class: edge.node.Class.displayName,
           owner: owner.user.userName,
           date: dateTime,
-          band: 'r',
+          // band: band,
         };
       });
 
@@ -120,12 +106,7 @@ class Home extends React.Component {
       <div>
         <Header />
         <ToolbarProducts
-          handleRelease={this.handleRelease}
-          handleDataset={this.handleDataSet}
-          handleType={this.handleType}
-          handleClasses={this.handleClasses}
-          handleBand={this.handleBand}
-          handleSearch={this.handleSearch}
+          handleFilterSelected={this.handleFilterSelected}
           clearData={this.clearData}
         />
         <Grid container spacing={16}>

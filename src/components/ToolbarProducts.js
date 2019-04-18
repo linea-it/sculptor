@@ -68,7 +68,6 @@ class ToolbarProducts extends React.Component {
   componentDidMount() {
     this.loadReleases();
     this.loadType();
-    this.loadBand();
   }
 
   loadReleases = async () => {
@@ -87,7 +86,7 @@ class ToolbarProducts extends React.Component {
         release: value 
       }, 
       () => {
-          this.props.handleRelease(value);
+          this.props.handleFilterSelected(event);
       }
     );
   };
@@ -107,7 +106,7 @@ class ToolbarProducts extends React.Component {
         dataset: value 
       }, 
       () => {
-          this.props.handleDataset(value);
+          this.props.handleFilterSelected(event);
       }
     );
   };
@@ -121,9 +120,10 @@ class ToolbarProducts extends React.Component {
   };
 
   onChangeType = event => {
+    const type = 'type';
     const value = event.target.value;
     this.loadClasses(value);
-    this.props.handleType(value);
+    this.props.handleFilterSelected({value, type});
     this.setState(
       {
         type: value,
@@ -146,7 +146,7 @@ class ToolbarProducts extends React.Component {
 
   onChangeClasses = event => {
     const value = event.target.value;
-    this.props.handleClasses(value);
+    this.props.handleFilterSelected(value);
     this.setState(
       {
         classes: value,
@@ -158,35 +158,37 @@ class ToolbarProducts extends React.Component {
   };
 
 
-  loadBand = async () => {
-    const data = await CentaurusApi.getBand();
-    console.log(data);
-    const bands = data.filtersList.edges.map(edge => edge.node.filter);
-    this.setState({
-      bands: bands,
-    });
-  }
+  // loadBand = async () => {
+  //   const data = await CentaurusApi.getBand();
+  //   console.log(data);
+  //   const bands = data.filtersList.edges.map(edge => edge.node.filter);
+  //   this.setState({
+  //     bands: bands,
+  //   });
+  // }
 
-  onChangeBand = event => {
-    const value = event.target.value;
-    this.setState(
-      { 
-        band: value 
-      },
-      () => {
-         this.props.handleBand(value)
-      }     
-    );
-  };
+  // onChangeBand = event => {
+  //   const value = event.target.value;
+  //   this.setState(
+  //     { 
+  //       band: value 
+  //     },
+  //     () => {
+  //        this.props.handleFilterSelectedBand(value)
+  //     }     
+  //   );
+  // };
   
   onChangeSearch = event => {
     const search = event.target.value;
     this.setState({ search: search });
-    this.props.handleSearch(search);
+    this.props.handleFilterSelected(search);
   };
 
 
   render() {
+    console.log('DataSet', this.state.dataset);
+    console.log('Release', this.state.release);
     const { classes } = this.props;
     const { releases, datasets, types, classesInput, bands } = this.state;
     return (
@@ -283,7 +285,7 @@ class ToolbarProducts extends React.Component {
               ))}
             </Select>
           </FormControl>
-          <FormControl className={classes.formControl}>
+          {/* <FormControl className={classes.formControl}>
             <InputLabel htmlFor="band">Band</InputLabel>
             <Select
               className={classes.select}
@@ -304,7 +306,7 @@ class ToolbarProducts extends React.Component {
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
+          </FormControl> */}
 
           <Button
             variant="contained"
