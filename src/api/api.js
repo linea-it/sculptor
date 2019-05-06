@@ -2,18 +2,25 @@ import client from './apiServer';
 
 export default class CentaurusApi {
   
-  static async searchSelectedFilter(value) {
-    const tagId = null;
-    const fieldId = null; 
-    const typeId = null;
-    const classId = null;
-    if (value.type === 'release') {
-    }
-    console.log('searchSelectedFilter:', value);
+  static async searchSelectedFilter(filters) {
     try {
+      let tagId;
+      let fieldId;
+      let typeId;
+      let classId;
+      let band;
+      let search;
+      
+      filters.release  === "" ? tagId = 0 : tagId = filters.release;
+      filters.dataset  === "" ? fieldId = 0 : fieldId = filters.dataset;
+      filters.type === "" ? typeId = 0 : typeId = filters.type;
+      filters.classesValue === "" ? classId = 0 : classId = filters.classesValue;
+      filters.search === null ? search = "": search = filters.search;
+      filters.band === null ? band = "" : band = "";
+
       const data = await client.query(`
       query search {
-        productsList(first: 10, tagId:${value.value}, fieldId:${value.value}) {
+        productsList(first: 3, tagId:${tagId}, fieldId:${fieldId}, typeId:${typeId}, classId: ${classId}, band:"${band}", filter:"${search}") {
           edges {
             node {
               productId
@@ -50,10 +57,11 @@ export default class CentaurusApi {
             }
           }
         }
-      }      
+      }
+      
         `);
       console.log('Data:', data);
-      value = null;
+      // value = null;
       return data;
     } catch (e) {
       return null;

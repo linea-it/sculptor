@@ -44,8 +44,7 @@ class ToolbarProducts extends React.Component {
     release: '',
     dataset: '',
     type: '',
-    classes: '',
-    band: '',
+    classesValue: '',
     releaseName: '',
     search: '',
   };
@@ -57,7 +56,7 @@ class ToolbarProducts extends React.Component {
         release: '',
         dataset: '',
         type: '',
-        classes: '',
+        classesValue: '',
         search: '',
       },
       () => {
@@ -78,6 +77,17 @@ class ToolbarProducts extends React.Component {
     });
   };
 
+  handleChange = () => {
+    const filters = {
+      release: this.state.release,
+      dataset: this.state.dataset,
+      type: this.state.type,
+      classesValue: this.state.classesValue,
+      search: this.state.search
+    }
+    this.props.handleFilterSelected(filters);
+  }
+
   onChangeRelease = (event) => {   
     const value = event.target.value;
     this.loadDataset(value);
@@ -86,7 +96,7 @@ class ToolbarProducts extends React.Component {
         release: value 
       }, 
       () => {
-          this.props.handleFilterSelected(event);
+          this.handleChange();
       }
     );
   };
@@ -106,7 +116,7 @@ class ToolbarProducts extends React.Component {
         dataset: value 
       }, 
       () => {
-          this.props.handleFilterSelected(event);
+        this.handleChange();
       }
     );
   };
@@ -128,9 +138,10 @@ class ToolbarProducts extends React.Component {
       {
         type: value,
       },
-      () => {
-        this.loadType();
-      }
+      () => (
+        this.loadClasses(),
+        this.handleChange()
+      )
     );
   };
 
@@ -146,51 +157,55 @@ class ToolbarProducts extends React.Component {
 
   onChangeClasses = event => {
     const value = event.target.value;
-    this.props.handleFilterSelected(value);
+    
     this.setState(
       {
-        classes: value,
+        classesValue: value,
       },
-      () => {
-        this.loadClasses();
-      }
+      () => (
+        this.handleChange()
+      )
     );
   };
 
+  loadClasses = async () => {
+    const dataClass = await CentaurusApi.getClasses();
+    const productClass = dataClass.productClassList.edges.map(
+      edge => edge.node
+    );
+    this.setState({
+      classesInput: productClass,
+    });
+  };
 
-  // loadBand = async () => {
-  //   const data = await CentaurusApi.getBand();
-  //   console.log(data);
-  //   const bands = data.filtersList.edges.map(edge => edge.node.filter);
-  //   this.setState({
-  //     bands: bands,
-  //   });
-  // }
-
-  // onChangeBand = event => {
-  //   const value = event.target.value;
-  //   this.setState(
-  //     { 
-  //       band: value 
-  //     },
-  //     () => {
-  //        this.props.handleFilterSelectedBand(value)
-  //     }     
-  //   );
-  // };
+  onChangeClasses = event => {
+    const value = event.target.value;
+    
+    this.setState(
+      {
+        classesValue: value,
+      },
+      () => (
+        this.handleChange()
+      )
+    );
+  };
   
   onChangeSearch = event => {
     const search = event.target.value;
-    this.setState({ search: search });
-    this.props.handleFilterSelected(search);
+    if (search.length <= 2) {
+      this.setState({ search: search });
+    } else  {
+      this.setState({ search: search },
+        () => this.handleChange()
+        );
+    } 
   };
 
 
   render() {
-    console.log('DataSet', this.state.dataset);
-    console.log('Release', this.state.release);
     const { classes } = this.props;
-    const { releases, datasets, types, classesInput, bands } = this.state;
+    const { releases, datasets, types, classesInput } = this.state;
     return (
       <React.Fragment>
         <Toolbar>
@@ -266,8 +281,8 @@ class ToolbarProducts extends React.Component {
             <InputLabel htmlFor="classes">Classes</InputLabel>
             <Select
               className={classes.select}
-              value={this.state.classes}
-              onChange={this.onChangeClass}
+              value={this.state.classesValue}
+              onChange={this.onChangeClasses}
               inputProps={{
                 name: 'Class',
                 id: 'class',
@@ -285,28 +300,6 @@ class ToolbarProducts extends React.Component {
               ))}
             </Select>
           </FormControl>
-          {/* <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="band">Band</InputLabel>
-            <Select
-              className={classes.select}
-              value={this.state.band}
-              onChange={this.onChangeBand}
-              inputProps={{
-                name: 'Band',
-                id: 'Band',
-              }}
-            >
-              <MenuItem value="">
-                <em>Band</em>
-              </MenuItem>
-
-              {bands.map((option, key) => (
-                <MenuItem key={key} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl> */}
 
           <Button
             variant="contained"

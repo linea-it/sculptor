@@ -28,38 +28,13 @@ class Home extends React.Component {
     return;
   };
 
-  handleFilterSelected = async ev => {
-    console.log('HandleFilterSelected:', ev);
-
-    if(ev.target.name == 'Release'){
-      this.setState({
-        Release: ev.target.value,
-      }, () => 
-        this.loadData(ev.target.value)
-      );  
-    }
-
-    if (ev.target.name == 'Dataset') {
-      this.setState({
-        Dataset: ev.target.value,
-      }, () => 
-        this.loadData(ev.target.value)
-      );
-    }
-
-    this.setState({
-      inputs: ev.target.name,
-    });
-
-    // ev ? this.loadData(ev.target.value) : this.clearData();
+  handleFilterSelected = async filters => {
+    this.loadData(filters);
   };
 
   loadData = async dataSearch => {
-    this.clearInputs();
-    console.log('LoadData:', dataSearch);
     if (dataSearch) {
-      const search = await CentaurusApi.identifyID(dataSearch);
-      console.log('search for data:', search)
+      const search = await CentaurusApi.searchSelectedFilter(dataSearch);
       const data = search.productsList.edges.map(edge => {
         const fields = edge.node.process.fields.edges;
         let fieldname = null;
@@ -74,14 +49,6 @@ class Home extends React.Component {
         const owner = edge.node.process.session;
         const dateTime = edge.node.process.startTime;
         
-        // const band = edge.node.table.map.filter;
-        //const bandName = null;
-        // if ((band.length > 0) || band === null) {
-        //   bandName = '-';
-        // } else {
-        //   bandName = band;
-        // }
-        // console.log('band', band);
         return {
           displayName: edge.node.displayName,
           dataType: edge.node.dataType,
@@ -91,7 +58,6 @@ class Home extends React.Component {
           Class: edge.node.Class.displayName,
           owner: owner.user.userName,
           date: dateTime,
-          // band: band,
         };
       });
 

@@ -35,7 +35,9 @@ function Footer(props) {
             Developer Portal Instance
           </Typography>
           <Typography color="inherit">Powered by </Typography>
-          <CardMedia className={classes.media} image={logo} title="LIneA" />
+          <a href="http://www.linea.gov.br/" target="_blank">
+            <CardMedia className={classes.media} image={logo} title="LIneA" />
+          </a>
         </Toolbar>
       </AppBar>
     </React.Fragment>

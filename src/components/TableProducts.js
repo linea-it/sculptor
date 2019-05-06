@@ -34,7 +34,6 @@ class TableProducts extends React.Component {
   };
 
   render() {
-    const classes = this.props;
     const data = this.props;
     return (
       <React.Fragment>
