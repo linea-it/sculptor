@@ -83,20 +83,20 @@ class ToolbarProducts extends React.Component {
       dataset: this.state.dataset,
       type: this.state.type,
       classesValue: this.state.classesValue,
-      search: this.state.search
-    }
+      search: this.state.search,
+    };
     this.props.handleFilterSelected(filters);
-  }
+  };
 
-  onChangeRelease = (event) => {   
+  onChangeRelease = event => {
     const value = event.target.value;
     this.loadDataset(value);
     this.setState(
       {
-        release: value 
-      }, 
+        release: value,
+      },
       () => {
-          this.handleChange();
+        this.handleChange();
       }
     );
   };
@@ -109,12 +109,12 @@ class ToolbarProducts extends React.Component {
     });
   };
 
-  onChangeDataset = (event) => {
+  onChangeDataset = event => {
     const value = event.target.value;
     this.setState(
       {
-        dataset: value 
-      }, 
+        dataset: value,
+      },
       () => {
         this.handleChange();
       }
@@ -133,15 +133,12 @@ class ToolbarProducts extends React.Component {
     const type = 'type';
     const value = event.target.value;
     this.loadClasses(value);
-    this.props.handleFilterSelected({value, type});
+    this.props.handleFilterSelected({ value, type });
     this.setState(
       {
         type: value,
       },
-      () => (
-        this.loadClasses(),
-        this.handleChange()
-      )
+      () => (this.loadClasses(), this.handleChange())
     );
   };
 
@@ -157,14 +154,12 @@ class ToolbarProducts extends React.Component {
 
   onChangeClasses = event => {
     const value = event.target.value;
-    
+
     this.setState(
       {
         classesValue: value,
       },
-      () => (
-        this.handleChange()
-      )
+      () => this.handleChange()
     );
   };
 
@@ -180,28 +175,19 @@ class ToolbarProducts extends React.Component {
 
   onChangeClasses = event => {
     const value = event.target.value;
-    
+
     this.setState(
       {
         classesValue: value,
       },
-      () => (
-        this.handleChange()
-      )
+      () => this.handleChange()
     );
   };
-  
+
   onChangeSearch = event => {
     const search = event.target.value;
-    if (search.length <= 2) {
-      this.setState({ search: search });
-    } else  {
-      this.setState({ search: search },
-        () => this.handleChange()
-        );
-    } 
+      this.setState({ search: search }, () => this.handleChange());
   };
-
 
   render() {
     const { classes } = this.props;
@@ -327,6 +313,8 @@ class ToolbarProducts extends React.Component {
 
 ToolbarProducts.propTypes = {
   classes: PropTypes.object.isRequired,
+  clearData: PropTypes.func.isRequired,
+  handleFilterSelected: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(ToolbarProducts);

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const style = theme => ({
+const style = () => ({
   loading: {
     position: 'absolute',
     top: 0,

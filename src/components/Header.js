@@ -7,7 +7,7 @@ import logo from '../assets/img/icon-des.png';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
-const styles = theme => ({
+const styles = () => ({
   root: {
     flexGrow: 1,
   },

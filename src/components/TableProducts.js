@@ -49,10 +49,10 @@ class TableProducts extends React.Component {
             columns={[
               { name: 'releaseDisplayName', title: 'Release' },
               { name: 'field', title: 'Dataset' },
-              { name: 'dataType', title: 'Type' },
+              { name: 'productType', title: 'Product Type' },
               { name: 'Class', title: 'Class' },
               { name: 'displayName', title: 'Product Name' },
-              { name: 'productType', title: 'Product Type' },
+              { name: 'dataType', title: 'Type' },
               { name: 'processId', title: 'Process ID' },
               { name: 'owner', title: 'Owner' },
               { name: 'band', title: 'Band' },

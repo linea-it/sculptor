@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import TableProducts from '../../components/TableProducts';
 import { Grid } from '@material-ui/core';
 import CentaurusApi from './../../api/api';
+import moment from 'moment';
 
 class Home extends React.Component {
   state = {
@@ -48,16 +49,17 @@ class Home extends React.Component {
         }
         const owner = edge.node.process.session;
         const dateTime = edge.node.process.startTime;
-        
+
         return {
           displayName: edge.node.displayName,
-          dataType: edge.node.dataType,
+          productType: edge.node.Class.productType.typeName,
           processId: edge.node.processId,
           releaseDisplayName: fieldname,
+          dataType: edge.node.dataType,
           field: field,
           Class: edge.node.Class.displayName,
           owner: owner.user.userName,
-          date: dateTime,
+          date: moment(dateTime).format("YYYY-MM-DD"),
         };
       });
 
