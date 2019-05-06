@@ -1,5 +1,6 @@
 {
-  "name": "template",
+  "name": "portal-science-products",
+  "homepage": "http://localhost/science-products",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
