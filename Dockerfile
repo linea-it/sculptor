@@ -14,8 +14,8 @@ RUN chmod -R g+w /var/www/science-products
 COPY nginx-proxy.conf /etc/nginx/conf.d/default.conf
 
 # RUNTIME ENV
-COPY env.sh /var/www/science-products
-COPY .env.template /var/www/science-products
+COPY env.sh /var/www/science-products/
+COPY .env.template /var/www/science-products/.env
 RUN chmod +x /var/www/science-products/env.sh
 WORKDIR /var/www/science-products
 
