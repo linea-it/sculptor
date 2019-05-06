@@ -6,7 +6,7 @@ import logo from './../../src/assets/img/linea-logo-mini.png';
 import Toolbar from '@material-ui/core/Toolbar';
 import { Typography, CardMedia } from '@material-ui/core';
 
-const styles = theme => ({
+const styles = () => ({
   appBar: {
     top: 'auto',
     bottom: 0,
@@ -35,7 +35,7 @@ function Footer(props) {
             Developer Portal Instance
           </Typography>
           <Typography color="inherit">Powered by </Typography>
-          <a href="http://www.linea.gov.br/" target="_blank">
+          <a href="http://www.linea.gov.br/" rel="noopener noreferrer">
             <CardMedia className={classes.media} image={logo} title="LIneA" />
           </a>
         </Toolbar>
