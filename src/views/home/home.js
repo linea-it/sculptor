@@ -59,7 +59,7 @@ class Home extends React.Component {
           field: field,
           Class: edge.node.Class.displayName,
           owner: owner.user.userName,
-          date: moment(dateTime).format("YYYY-MM-DD"),
+          date: moment(dateTime).format('YYYY-MM-DD'),
         };
       });
 
