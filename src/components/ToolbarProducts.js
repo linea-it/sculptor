@@ -186,7 +186,7 @@ class ToolbarProducts extends React.Component {
 
   onChangeSearch = event => {
     const search = event.target.value;
-      this.setState({ search: search }, () => this.handleChange());
+    this.setState({ search: search }, () => this.handleChange());
   };
 
   render() {
