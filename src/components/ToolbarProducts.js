@@ -11,13 +11,15 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import LongMenu from './../components/clearComponents';
 
 const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
+    justifyContent:  'space-between',
   },
-  button: {
+  search: {
     margin: theme.spacing.unit * 2,
     padding: '3px 20px',
   },
@@ -30,6 +32,10 @@ const styles = theme => ({
   search: {
     marginLeft: theme.spacing.unit * 4,
     padding: '8px 60px',
+  },
+  longMenu: {
+    marginLeft: theme.spacing.unit * 12,
+    // padding: '8px 60px',
   },
 });
 
@@ -186,7 +192,12 @@ class ToolbarProducts extends React.Component {
 
   onChangeSearch = event => {
     const search = event.target.value;
-      this.setState({ search: search }, () => this.handleChange());
+    this.setState({ search: search }, () => 
+    this.handleChange(),
+      // if(search === "") {
+      //   console.log("Tá vazio em");
+      // }
+    );
   };
 
   render() {
@@ -286,25 +297,26 @@ class ToolbarProducts extends React.Component {
               ))}
             </Select>
           </FormControl>
-
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={this.onClearSelects}
-          >
-            Clear Filter
-          </Button>
           <InputBase
             value={this.state.search}
             onChange={this.onChangeSearch}
             placeholder="Search"
+            className={classes.search}
           />
           <IconButton className={classes.iconButton} aria-label="Search">
             <Icon className={classes.icon} color="primary">
               search
             </Icon>
           </IconButton>
+             {/* <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={this.onClearSelects}
+          >
+            Clear Filter
+          </Button> */}
+          <LongMenu onClearSelects={this.onClearSelects} className={classes.longMenu}/>
         </Toolbar>
       </React.Fragment>
     );

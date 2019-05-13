@@ -1,7 +1,9 @@
 import client from './apiServer';
 
 export default class CentaurusApi {
-  static async searchSelectedFilter(filters) {
+  static async searchSelectedFilter(filters, pageSize) {
+    // console.log('after api', after);
+    console.log('pageSize api', pageSize);
     try {
       let tagId;
       let fieldId;
@@ -21,7 +23,8 @@ export default class CentaurusApi {
 
       const data = await client.query(`
       query search {
-        productsList(first: 3, tagId:${tagId}, fieldId:${fieldId}, typeId:${typeId}, classId: ${classId}, band:"${band}", filter:"${search}") {
+        productsList(tagId:${tagId}, fieldId:${fieldId}, typeId:${typeId}, classId: ${classId}, band:"${band}", filter:"${search}", first: ${pageSize}) {
+          totalCount
           edges {
             node {
               productId
@@ -59,11 +62,13 @@ export default class CentaurusApi {
                 }
               }
             }
+            cursor
           }
         }
       }
       
         `);
+      // console.log("data", data);
       return data;
     } catch (e) {
       return null;
