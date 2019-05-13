@@ -5,19 +5,18 @@ import Header from '../../components/Header';
 import TableProducts from '../../components/TableProducts';
 import { Grid } from '@material-ui/core';
 
-
 class Home extends React.Component {
   state = {
     Release: null,
     Dataset: null,
     totalCount: 0,
+    filters: {},
   };
 
   clearData = () => {
     this.setState({
-      data: [],
+      filters: {},
     });
-    return;
   };
 
   clearInputs = () => {
@@ -30,11 +29,9 @@ class Home extends React.Component {
 
   handleFilterSelected = async filters => {
     this.setState({
-      filtros: filters
-    })
+      filters: filters,
+    });
   };
-
-
 
   render() {
     return (
@@ -46,7 +43,7 @@ class Home extends React.Component {
         />
         <Grid container spacing={16}>
           <Grid item xs={12}>
-            <TableProducts filters={this.state.filtros}/>
+            <TableProducts filters={this.state.filters} />
           </Grid>
         </Grid>
         <Footer />
