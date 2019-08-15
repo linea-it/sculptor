@@ -20,7 +20,27 @@ export default class CentaurusApi {
 
       const data = await client.query(`
       query search {
-        productsList(tagId:${tagId}, fieldId:${fieldId}, typeId:${typeId}, classId: ${classId}, band:"${band}", search: { text: "${search}" }, first: ${sizePage}, after: "${after}") {
+        productsList(
+          tagId:${tagId},
+          fieldId:${fieldId},
+          typeId:${typeId},
+          classId: ${classId},
+          band:"${band}",
+          search: {
+            text: "${search}",
+            columns: [
+              release_tag_name,
+              fields_field_name,
+              fields_display_name,
+              product_type_display_name
+              product_class_display_name
+              products_display_name,
+              products_process_id,
+            ]
+          },
+          first: ${sizePage},
+          after: "${after}"
+        ) {
           totalCount
           edges {
             node {
