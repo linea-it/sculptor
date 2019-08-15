@@ -29,6 +29,15 @@ class Home extends React.Component {
     return;
   };
 
+  handleFilter = (filter, displayName) => {
+    if (filter) {
+      const id = 'filter';
+      this.loadData({ filter, id, displayName });
+    } else {
+      this.clearData();
+    }
+  };
+
   handleFilterSelected = async filters => {
     this.loadData(filters);
   };
@@ -36,33 +45,38 @@ class Home extends React.Component {
   loadData = async dataSearch => {
     if (dataSearch) {
       const search = await CentaurusApi.searchSelectedFilter(dataSearch);
-      const data = search.productsList.edges.map(edge => {
-        const fields = edge.node.process.fields.edges;
-        let fieldname = null;
-        if (fields.length > 0) {
-          fieldname = fields[0].node.releaseTag.releaseDisplayName;
-        }
-        const dataset = edge.node.process.fields.edges;
-        let field = null;
-        if (dataset.length > 0) {
-          field = fields[0].node.displayName;
-        }
-        const owner = edge.node.process.session;
-        const dateTime = edge.node.process.startTime;
+      const data = search
+        ? search.productsList.edges.map(edge => {
+            const fields = edge.node.process.fields.edges;
+            let fieldname = null;
+            if (fields.length > 0) {
+              fieldname = fields[0].node.releaseTag.releaseDisplayName;
+            }
+            const dataset = edge.node.process.fields.edges;
+            let field = null;
+            if (dataset.length > 0) {
+              field = fields[0].node.displayName;
+            }
+            const owner = edge.node.process.session;
+            const dateTime = edge.node.process.startTime;
 
-        return {
-          displayName: edge.node.displayName,
-          productType: edge.node.Class.productType.typeName,
-          processId: edge.node.processId,
-          releaseDisplayName: fieldname,
-          dataType: edge.node.dataType,
-          field: field,
-          Class: edge.node.Class.displayName,
-          owner: owner.user.userName,
-          date: moment(dateTime).format('YYYY-MM-DD'),
-        };
-      });
+            // console.log(edge.node.table);
 
+            return {
+              displayName: edge.node.displayName,
+              productType: edge.node.Class.productType.typeName,
+              processId: edge.node.processId,
+              releaseDisplayName: fieldname,
+              dataType: edge.node.dataType,
+              field: field,
+              Class: edge.node.Class.displayName,
+              owner: owner.user.userName,
+              productLog: edge.node.process.productLog,
+              daCHs: edge.node.table ? edge.node.table.dachsUrl : '',
+              date: moment(dateTime).format('YYYY-MM-DD'),
+            };
+          })
+        : [];
       this.setState({
         data: data,
       });
@@ -87,5 +101,4 @@ class Home extends React.Component {
     );
   }
 }
-
 export default Home;

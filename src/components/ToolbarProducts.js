@@ -132,41 +132,22 @@ class ToolbarProducts extends React.Component {
   onChangeType = event => {
     const type = 'type';
     const value = event.target.value;
-    this.loadClasses(value);
+
+    // this.loadClasses(value);
     this.props.handleFilterSelected({ value, type });
     this.setState(
       {
         type: value,
       },
-      () => (this.loadClasses(), this.handleChange())
-    );
-  };
-
-  loadClasses = async () => {
-    const dataClass = await CentaurusApi.getClasses();
-    const productClass = dataClass.productClassList.edges.map(
-      edge => edge.node
-    );
-    this.setState({
-      classesInput: productClass,
-    });
-  };
-
-  onChangeClasses = event => {
-    const value = event.target.value;
-
-    this.setState(
-      {
-        classesValue: value,
-      },
+      () => this.loadClasses(value),
       () => this.handleChange()
     );
   };
 
   loadClasses = async () => {
     const dataClass = await CentaurusApi.getClasses();
-    const productClass = dataClass.productClassList.edges.map(
-      edge => edge.node
+    const productClass = dataClass.productsList.edges.map(
+      edge => edge.node.Class
     );
     this.setState({
       classesInput: productClass,
@@ -186,7 +167,7 @@ class ToolbarProducts extends React.Component {
 
   onChangeSearch = event => {
     const search = event.target.value;
-    this.setState({ search: search }, () => this.handleChange());
+    this.setState({ search }, () => this.handleChange());
   };
 
   render() {
@@ -195,97 +176,103 @@ class ToolbarProducts extends React.Component {
     return (
       <React.Fragment>
         <Toolbar>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="release">Release</InputLabel>
-            <Select
-              className={classes.select}
-              value={this.state.release}
-              onChange={this.onChangeRelease}
-              inputProps={{
-                name: 'Release',
-                id: 'release',
-              }}
-            >
-              <MenuItem value="">
-                <em>Any</em>
-              </MenuItem>
-
-              {releases.map((option, key) => (
-                <MenuItem key={key} value={option.tagId}>
-                  {option.releaseDisplayName}
+          <form autoComplete="off">
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="release">Release</InputLabel>
+              <Select
+                className={classes.select}
+                value={this.state.release}
+                onChange={this.onChangeRelease}
+                inputProps={{
+                  name: 'Release',
+                  id: 'release',
+                }}
+              >
+                <MenuItem value={0}>
+                  <em>Any</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
 
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="dataset">Dataset</InputLabel>
-            <Select
-              className={classes.select}
-              value={this.state.dataset}
-              onChange={this.onChangeDataset}
-              inputProps={{
-                name: 'Dataset',
-                id: 'dataset',
-              }}
-              disabled={datasets.length > 0 ? false : true}
-            >
-              <MenuItem value="">
-                <em>Any</em>
-              </MenuItem>
+                {releases.map((option, key) => (
+                  <MenuItem
+                    key={key}
+                    value={option.tagId}
+                    title={option.releaseDisplayName}
+                  >
+                    {option.releaseDisplayName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-              {datasets.map((option, key) => (
-                <MenuItem key={key} value={option.fieldId}>
-                  {option.displayName}
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="dataset">Dataset</InputLabel>
+              <Select
+                className={classes.select}
+                value={this.state.dataset}
+                onChange={this.onChangeDataset}
+                inputProps={{
+                  name: 'Dataset',
+                  id: 'dataset',
+                }}
+                disabled={datasets.length > 0 ? false : true}
+              >
+                <MenuItem value={0}>
+                  <em>Any</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="type">Type</InputLabel>
-            <Select
-              className={classes.select}
-              value={this.state.type}
-              onChange={this.onChangeType}
-              inputProps={{
-                name: 'Type',
-                id: 'type',
-              }}
-            >
-              <MenuItem value="">
-                <em>Type</em>
-              </MenuItem>
 
-              {types.map((option, key) => (
-                <MenuItem key={key} value={option.typeId}>
-                  {option.displayName}
+                {datasets.map((option, key) => (
+                  <MenuItem key={key} value={option.fieldId}>
+                    {option.displayName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="type">Type</InputLabel>
+              <Select
+                className={classes.select}
+                value={this.state.type}
+                onChange={this.onChangeType}
+                inputProps={{
+                  name: 'Type',
+                  id: 'type',
+                }}
+              >
+                <MenuItem value={0}>
+                  <em>Type</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="classes">Classes</InputLabel>
-            <Select
-              className={classes.select}
-              value={this.state.classesValue}
-              onChange={this.onChangeClasses}
-              inputProps={{
-                name: 'Class',
-                id: 'class',
-              }}
-              disabled={classesInput.length > 0 ? false : true}
-            >
-              <MenuItem value="">
-                <em>Class</em>
-              </MenuItem>
 
-              {classesInput.map((option, key) => (
-                <MenuItem key={key} value={option.classId}>
-                  {option.displayName}
+                {types.map((option, key) => (
+                  <MenuItem key={key} value={option.typeId}>
+                    {option.displayName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <InputLabel htmlFor="classes">Classes</InputLabel>
+              <Select
+                className={classes.select}
+                value={this.state.classesValue}
+                onChange={this.onChangeClasses}
+                inputProps={{
+                  name: 'Class',
+                  id: 'class',
+                }}
+                disabled={classesInput.length > 0 ? false : true}
+              >
+                <MenuItem value={0}>
+                  <em>Class</em>
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+
+                {classesInput.map((option, key) => (
+                  <MenuItem key={key} value={option.classId}>
+                    {option.displayName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </form>
 
           <Button
             variant="contained"
@@ -313,7 +300,10 @@ class ToolbarProducts extends React.Component {
 
 ToolbarProducts.propTypes = {
   classes: PropTypes.object.isRequired,
-  clearData: PropTypes.func.isRequired,
+
+  handleSearch: PropTypes.func,
+  handleFilter: PropTypes.func,
+  clearData: PropTypes.func,
   handleFilterSelected: PropTypes.func.isRequired,
 };
 
