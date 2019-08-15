@@ -275,15 +275,6 @@ class ToolbarProducts extends React.Component {
               </Select>
             </FormControl>
           </form>
-
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={this.onClearSelects}
-          >
-            Clear Filter
-          </Button>
           <InputBase
             value={this.state.search}
             onChange={this.onChangeSearch}
