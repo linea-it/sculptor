@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Footer from '../../components/Footer';
 import ToolbarProducts from '../../components/ToolbarProducts';
 import { withStyles } from '@material-ui/core/styles';
@@ -73,8 +74,6 @@ class Home extends React.Component {
             const owner = edge.node.process.session;
             const dateTime = edge.node.process.startTime;
 
-            // console.log(edge.node.table);
-
             return {
               displayName: edge.node.displayName,
               productType: edge.node.Class.productType.typeName,
@@ -117,4 +116,9 @@ class Home extends React.Component {
     );
   }
 }
+
+Home.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
 export default withStyles(styles)(Home);

@@ -31,7 +31,6 @@ const styles = theme => ({
   },
   longMenu: {
     marginLeft: theme.spacing.unit * 12,
-    // padding: '8px 60px',
   },
 });
 
@@ -135,7 +134,6 @@ class ToolbarProducts extends React.Component {
     const type = 'type';
     const value = event.target.value;
 
-    // this.loadClasses(value);
     this.props.handleFilterSelected({ value, type });
     this.setState(
       {
@@ -244,7 +242,7 @@ class ToolbarProducts extends React.Component {
                 }}
               >
                 <MenuItem value={0}>
-                  <em>Type</em>
+                  <em>Any</em>
                 </MenuItem>
 
                 {types.map((option, key) => (
@@ -267,7 +265,7 @@ class ToolbarProducts extends React.Component {
                 disabled={classesInput.length > 0 ? false : true}
               >
                 <MenuItem value={0}>
-                  <em>Class</em>
+                  <em>Any</em>
                 </MenuItem>
                 {classesInput.map((option, key) => (
                   <MenuItem key={key} value={option.classId}>
@@ -297,14 +295,6 @@ class ToolbarProducts extends React.Component {
               search
             </Icon>
           </IconButton>
-          {/* <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={this.onClearSelects}
-          >
-            Clear Filter
-          </Button> */}
           <LongMenu
             onClearSelects={this.onClearSelects}
             className={classes.longMenu}

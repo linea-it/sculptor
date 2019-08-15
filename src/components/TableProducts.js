@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Grid,
   Table,
@@ -43,17 +44,11 @@ class TableProducts extends React.Component {
     data: [],
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log('componentDidUpdate');
+  componentDidUpdate(prevProps) {
     if (this.props.filters !== prevProps.filters) {
-      console.log('Diferente');
-        this.loadData();
+      this.loadData();
     }
   }
-
-  // componentDidMount() {
-  //   this.loadData();
-  // }
 
   changeCurrentPage = currentPage => {
     var offset = currentPage * this.state.pageSize;
@@ -89,75 +84,70 @@ class TableProducts extends React.Component {
   };
 
   loadData = async () => {
-
     const dataSearch = this.props.filters;
     const { pageSize, after } = this.state;
 
     this.setState({ loading: true });
 
-      if (!isEmpty(dataSearch)) {
-        const search = await CentaurusApi.searchSelectedFilter(
-          dataSearch,
-          pageSize,
-          after
-        );
-        
-  
-        if (search == null) {
-          this.setState({
-            data: [],
-            totalCount: 0,
-            currentPage: 0,
-            loading: false,
-          });
-        } else {
-          const data = search.productsList.edges.map(edge => {
-            const fields = edge.node.process.fields.edges;
-            let fieldname = null;
-            if (fields.length > 0) {
-              fieldname = fields[0].node.releaseTag.releaseDisplayName;
-            }
-            const dataset = edge.node.process.fields.edges;
-            let field = null;
-            if (dataset.length > 0) {
-              field = fields[0].node.displayName;
-            }
-            const owner = edge.node.process.session;
-            const dateTime = edge.node.process.startTime;
-  
-            return {
-              displayName: edge.node.displayName,
-              productType: edge.node.Class.productType.typeName,
-              processId: edge.node.processId,
-              releaseDisplayName: fieldname,
-              dataType: edge.node.dataType,
-              field: field,
-              Class: edge.node.Class.displayName,
-              owner: owner.user.userName,
-              date: moment(dateTime).format('YYYY-MM-DD'),
-            };
-          });
-  
-          this.setState({
-            data: data,
-            totalCount: search.productsList.totalCount,
-            loading: false,
-          });
-        }
-      } else {
+    if (!isEmpty(dataSearch)) {
+      const search = await CentaurusApi.searchSelectedFilter(
+        dataSearch,
+        pageSize,
+        after
+      );
 
+      if (search == null) {
         this.setState({
           data: [],
           totalCount: 0,
           currentPage: 0,
           loading: false,
         });
+      } else {
+        const data = search.productsList.edges.map(edge => {
+          const fields = edge.node.process.fields.edges;
+          let fieldname = null;
+          if (fields.length > 0) {
+            fieldname = fields[0].node.releaseTag.releaseDisplayName;
+          }
+          const dataset = edge.node.process.fields.edges;
+          let field = null;
+          if (dataset.length > 0) {
+            field = fields[0].node.displayName;
+          }
+          const owner = edge.node.process.session;
+          const dateTime = edge.node.process.startTime;
+
+          return {
+            displayName: edge.node.displayName,
+            productType: edge.node.Class.productType.typeName,
+            processId: edge.node.processId,
+            releaseDisplayName: fieldname,
+            dataType: edge.node.dataType,
+            field: field,
+            Class: edge.node.Class.displayName,
+            owner: owner.user.userName,
+            date: moment(dateTime).format('YYYY-MM-DD'),
+          };
+        });
+
+        this.setState({
+          data: data,
+          totalCount: search.productsList.totalCount,
+          loading: false,
+        });
       }
-    
+    } else {
+      this.setState({
+        data: [],
+        totalCount: 0,
+        currentPage: 0,
+        loading: false,
+      });
+    }
   };
 
   render() {
-    // const data = this.props;
     const { loading, data, totalCount, currentPage, pageSize } = this.state;
 
     return (
@@ -167,8 +157,8 @@ class TableProducts extends React.Component {
             rows={
               data
                 ? data.map(el => {
-                  return el;
-                })
+                    return el;
+                  })
                 : []
             }
             columns={[
@@ -195,21 +185,25 @@ class TableProducts extends React.Component {
             <TableHeaderRow />
             <PagingPanel pageSizes={this.state.pageSizes} />
           </Grid>
-          {loading && <CircularProgress
-           style = {
-              {
+          {loading && (
+            <CircularProgress
+              style={{
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
                 margin: '-30px 0 0 -20px',
                 zIndex: '99',
-              }
-            }
-        />}
+              }}
+            />
+          )}
         </Card>
       </React.Fragment>
     );
   }
 }
+
+TableProducts.propTypes = {
+  filters: PropTypes.object.isRequired,
+};
 
 export default withStyles(styles)(TableProducts);
