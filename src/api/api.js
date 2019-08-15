@@ -2,12 +2,16 @@
 import client from './apiServer';
 
 export default class CentaurusApi {
-  static async searchSelectedFilter(filters) {
+  static async searchSelectedFilter(filters, pageSize, after) {
+    // console.log('after api', after);
+    // console.log('pageSize api', pageSize);
     try {
       const tagId = filters.release ? filters.release : 0;
       const fieldId = filters.dataset ? filters.dataset : 0;
       const typeId = filters.value ? filters.value : 0;
       const classId = filters.classesValue ? filters.classesValue : 0;
+      const sizePage =
+        pageSize && typeof pageSize !== 'undefined' ? pageSize : 10;
       let band;
       let search;
 
@@ -16,17 +20,8 @@ export default class CentaurusApi {
 
       const data = await client.query(`
       query search {
-        productsList(
-          first: 5,
-          tagId: ${tagId},
-          fieldId: ${fieldId},
-          typeId: ${typeId},
-          classId: ${classId},
-          band: "${band}",
-          search: {
-            text: "${search}"
-          }
-        ) {
+        productsList(tagId:${tagId}, fieldId:${fieldId}, typeId:${typeId}, classId: ${classId}, band:"${band}", search: { text: "${search}" }, first: ${sizePage}, after: "${after}") {
+          totalCount
           edges {
             node {
               productId
@@ -68,14 +63,12 @@ export default class CentaurusApi {
                 }
               }
             }
+            cursor
           }
         }
       }
 
         `);
-
-      console.log(data);
-
       return data;
     } catch (e) {
       console.error(e);

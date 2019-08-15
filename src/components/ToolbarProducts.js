@@ -11,15 +11,13 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import LongMenu from './../components/clearComponents';
 
 const styles = theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
-  },
-  button: {
-    margin: theme.spacing.unit * 2,
-    padding: '3px 20px',
+    justifyContent: 'space-between',
   },
   select: {
     minWidth: 140,
@@ -30,6 +28,9 @@ const styles = theme => ({
   search: {
     marginLeft: theme.spacing.unit * 4,
     padding: '8px 60px',
+  },
+  longMenu: {
+    marginLeft: theme.spacing.unit * 12,
   },
 });
 
@@ -133,7 +134,6 @@ class ToolbarProducts extends React.Component {
     const type = 'type';
     const value = event.target.value;
 
-    // this.loadClasses(value);
     this.props.handleFilterSelected({ value, type });
     this.setState(
       {
@@ -167,6 +167,9 @@ class ToolbarProducts extends React.Component {
 
   onChangeSearch = event => {
     const search = event.target.value;
+    if (!search) {
+      this.setState({ search: '' });
+    }
     this.setState({ search }, () => this.handleChange());
   };
 
@@ -239,7 +242,7 @@ class ToolbarProducts extends React.Component {
                 }}
               >
                 <MenuItem value={0}>
-                  <em>Type</em>
+                  <em>Any</em>
                 </MenuItem>
 
                 {types.map((option, key) => (
@@ -262,9 +265,8 @@ class ToolbarProducts extends React.Component {
                 disabled={classesInput.length > 0 ? false : true}
               >
                 <MenuItem value={0}>
-                  <em>Class</em>
+                  <em>Any</em>
                 </MenuItem>
-
                 {classesInput.map((option, key) => (
                   <MenuItem key={key} value={option.classId}>
                     {option.displayName}
@@ -286,12 +288,17 @@ class ToolbarProducts extends React.Component {
             value={this.state.search}
             onChange={this.onChangeSearch}
             placeholder="Search"
+            className={classes.search}
           />
           <IconButton className={classes.iconButton} aria-label="Search">
             <Icon className={classes.icon} color="primary">
               search
             </Icon>
           </IconButton>
+          <LongMenu
+            onClearSelects={this.onClearSelects}
+            className={classes.longMenu}
+          />
         </Toolbar>
       </React.Fragment>
     );

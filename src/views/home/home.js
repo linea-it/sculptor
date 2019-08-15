@@ -1,24 +1,35 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Footer from '../../components/Footer';
 import ToolbarProducts from '../../components/ToolbarProducts';
+import { withStyles } from '@material-ui/core/styles';
 import Header from '../../components/Header';
 import TableProducts from '../../components/TableProducts';
 import { Grid } from '@material-ui/core';
-import CentaurusApi from './../../api/api';
 import moment from 'moment';
+import CentaurusApi from './../../api/api';
+
+const styles = {
+  wrap: {
+    position: 'relative',
+  },
+  table: {
+    paddingBottom: '100px',
+  },
+};
 
 class Home extends React.Component {
   state = {
-    data: [],
     Release: null,
     Dataset: null,
+    totalCount: 0,
+    filters: {},
   };
 
   clearData = () => {
     this.setState({
-      data: [],
+      filters: {},
     });
-    return;
   };
 
   clearInputs = () => {
@@ -39,6 +50,9 @@ class Home extends React.Component {
   };
 
   handleFilterSelected = async filters => {
+    this.setState({
+      filters: filters,
+    });
     this.loadData(filters);
   };
 
@@ -59,8 +73,6 @@ class Home extends React.Component {
             }
             const owner = edge.node.process.session;
             const dateTime = edge.node.process.startTime;
-
-            // console.log(edge.node.table);
 
             return {
               displayName: edge.node.displayName,
@@ -84,21 +96,29 @@ class Home extends React.Component {
   };
 
   render() {
+    const { classes } = this.props;
     return (
-      <div>
+      <div className={classes.wrap}>
         <Header />
-        <ToolbarProducts
-          handleFilterSelected={this.handleFilterSelected}
-          clearData={this.clearData}
-        />
-        <Grid container spacing={16}>
-          <Grid item xs={12}>
-            <TableProducts data={this.state.data} />
+        <div className={classes.table}>
+          <ToolbarProducts
+            handleFilterSelected={this.handleFilterSelected}
+            clearData={this.clearData}
+          />
+          <Grid container spacing={16}>
+            <Grid item xs={12}>
+              <TableProducts filters={this.state.filters} />
+            </Grid>
           </Grid>
-        </Grid>
+        </div>
         <Footer />
       </div>
     );
   }
 }
-export default Home;
+
+Home.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Home);
