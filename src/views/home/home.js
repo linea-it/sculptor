@@ -5,10 +5,13 @@ import Header from '../../components/Header';
 import TableProducts from '../../components/TableProducts';
 import { Grid } from '@material-ui/core';
 import CentaurusApi from './../../api/api';
+import moment from 'moment';
 
 class Home extends React.Component {
   state = {
     data: [],
+    Release: null,
+    Dataset: null,
   };
 
   clearData = () => {
@@ -18,13 +21,12 @@ class Home extends React.Component {
     return;
   };
 
-  handleSearch = search => {
-    if (search) {
-      const id = 'search';
-      this.loadData({ search, id });
-    } else {
-      this.clearData();
-    }
+  clearInputs = () => {
+    this.setState({
+      Release: null,
+      Dataset: null,
+    });
+    return;
   };
 
   handleFilter = (filter, displayName) => {
@@ -36,37 +38,45 @@ class Home extends React.Component {
     }
   };
 
-  loadData = async value => {
-    this.clearData();
-    const dataSearch = await CentaurusApi.searchProductsAllFilters(value);
-    if (dataSearch) {
-      const data = dataSearch.productsList.edges.map(edge => {
-        const fields = edge.node.process.fields.edges;
-        let fieldname = null;
-        if (fields.length > 0) {
-          fieldname = fields[0].node.releaseTag.releaseDisplayName;
-        }
-        const dataset = edge.node.process.fields.edges;
-        let field = null;
-        if (dataset.length > 0) {
-          field = fields[0].node.displayName;
-        }
-        const owner = edge.node.process.session;
-        const dateTime = edge.node.process.startTime;
+  handleFilterSelected = async filters => {
+    this.loadData(filters);
+  };
 
-        return {
-          displayName: edge.node.displayName,
-          dataType: edge.node.dataType,
-          processId: edge.node.processId,
-          releaseDisplayName: fieldname,
-          field: field,
-          Class: edge.node.Class.displayName,
-          owner: owner.user.userName,
-          date: dateTime,
-          productLog: edge.node.process.productLog,
-          daCHs: edge.node.table.dachsUrl,
-        };
-      });
+  loadData = async dataSearch => {
+    if (dataSearch) {
+      const search = await CentaurusApi.searchSelectedFilter(dataSearch);
+      const data = search
+        ? search.productsList.edges.map(edge => {
+            const fields = edge.node.process.fields.edges;
+            let fieldname = null;
+            if (fields.length > 0) {
+              fieldname = fields[0].node.releaseTag.releaseDisplayName;
+            }
+            const dataset = edge.node.process.fields.edges;
+            let field = null;
+            if (dataset.length > 0) {
+              field = fields[0].node.displayName;
+            }
+            const owner = edge.node.process.session;
+            const dateTime = edge.node.process.startTime;
+
+            // console.log(edge.node.table);
+
+            return {
+              displayName: edge.node.displayName,
+              productType: edge.node.Class.productType.typeName,
+              processId: edge.node.processId,
+              releaseDisplayName: fieldname,
+              dataType: edge.node.dataType,
+              field: field,
+              Class: edge.node.Class.displayName,
+              owner: owner.user.userName,
+              productLog: edge.node.process.productLog,
+              daCHs: edge.node.table ? edge.node.table.dachsUrl : '',
+              date: moment(dateTime).format('YYYY-MM-DD'),
+            };
+          })
+        : [];
       this.setState({
         data: data,
       });
@@ -78,13 +88,12 @@ class Home extends React.Component {
       <div>
         <Header />
         <ToolbarProducts
-          handleSearch={this.handleSearch}
-          handleFilter={this.handleFilter}
+          handleFilterSelected={this.handleFilterSelected}
           clearData={this.clearData}
         />
         <Grid container spacing={16}>
           <Grid item xs={12}>
-            <TableProducts rows={this.state.data} />
+            <TableProducts data={this.state.data} />
           </Grid>
         </Grid>
         <Footer />
@@ -92,5 +101,4 @@ class Home extends React.Component {
     );
   }
 }
-
 export default Home;

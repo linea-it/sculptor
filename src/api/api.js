@@ -1,18 +1,88 @@
-import Lokka from 'lokka';
-
-import Transport from 'lokka-transport-http';
-
-const apiUrl =
-  process.env.NODE_ENV !== 'development'
-    ? window.origin + '/api/graphql'
-    : process.env.REACT_APP_API_URL;
-
-const client = new Lokka({
-  transport: new Transport(apiUrl),
-});
+/* eslint-disable no-console */
+import client from './apiServer';
 
 export default class CentaurusApi {
-  static async getAllrelease() {
+  static async searchSelectedFilter(filters) {
+    try {
+      const tagId = filters.release ? filters.release : 0;
+      const fieldId = filters.dataset ? filters.dataset : 0;
+      const typeId = filters.value ? filters.value : 0;
+      const classId = filters.classesValue ? filters.classesValue : 0;
+      let band;
+      let search;
+
+      filters.search === null ? (search = '') : (search = filters.search);
+      filters.band === null ? (band = '') : (band = '');
+
+      const data = await client.query(`
+      query search {
+        productsList(
+          first: 5,
+          tagId: ${tagId},
+          fieldId: ${fieldId},
+          typeId: ${typeId},
+          classId: ${classId},
+          band: "${band}",
+          search: {
+            text: "${search}"
+          }
+        ) {
+          edges {
+            node {
+              productId
+              displayName
+              dataType
+              processId
+              tableId
+              table {
+                id
+               dachsUrl
+              }
+              Class {
+                id
+                displayName
+                productType {
+                  typeName
+                }
+              }
+              process {
+                startTime
+                session {
+                  id
+                  user {
+                    id
+                    userName
+                  }
+                }
+                fields {
+                  edges {
+                    node {
+                      id
+                      displayName
+                      releaseTag {
+                        id
+                        releaseDisplayName
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+        `);
+
+      console.log(data);
+
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static async getRelease() {
     try {
       const releases = await client.query(`
       query realease {
@@ -36,42 +106,42 @@ export default class CentaurusApi {
 
   static async getDataset(tagId) {
     try {
-      const datasets = await client.query(`
-          query fieldByTag {
-            fieldsByTagId(tagId: ${tagId}) {
-              id
-              fieldId
-              displayName
+      let datasets = '';
+      if (tagId === 0) {
+        const data = await client.query(`
+            query fieldsList {
+              fieldsList {
+                edges {
+                  node {
+                    id
+                    fieldId
+                    displayName
+                  }
+                }
+              }
             }
-          }
         `);
+        datasets = {
+          fieldsByTagId: data.fieldsList.edges.map(edge => edge.node),
+        };
+      } else {
+        datasets = await client.query(`
+            query fieldByTag {
+              fieldsByTagId(tagId: ${tagId}) {
+                id
+                fieldId
+                displayName
+              }
+            }
+        `);
+      }
       return datasets;
     } catch (e) {
       return null;
     }
   }
 
-  static async getAllClass() {
-    try {
-      const productClass = await client.query(`
-      query productClass {
-        productClassList {
-          edges {
-            node {
-              displayName
-            }
-          }
-        }
-      }
-      
-        `);
-      return productClass;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  static async getAllType() {
+  static async getType() {
     try {
       const productType = await client.query(`
       query type {
@@ -79,13 +149,13 @@ export default class CentaurusApi {
           edges {
             node {
               id
-              typeName
+              typeId
               displayName
             }
           }
         }
       }
-      
+
         `);
       return productType;
     } catch (e) {
@@ -93,58 +163,35 @@ export default class CentaurusApi {
     }
   }
 
-  static async searchProductsAllFilters(value) {
-    let releaseName, filter;
-    let queryValue = '';
-
-    if (value.id === 'search') {
-      queryValue = value.search;
-      releaseName = '';
-      filter = queryValue;
-    } else {
-      queryValue = value.filter;
-      releaseName = queryValue;
-      filter = '';
-    }
+  static async getClasses() {
     try {
       const data = await client.query(`
-      query search {
-        productsList(filter: "${filter}", releaseName:"${releaseName}" ) {
-          edges {
-            node {
-              productId
-              displayName
-              dataType
-              processId
-              tableId
-              dataType
-              table {
-                id
-               dachsUrl
-              }
-              Class {
-                id
+        query search {
+          productsList(first: 10) {
+            edges {
+              node {
                 displayName
-              }
-              process {
-                productLog
-                startTime,
-                session {
+                dataType
+                processId
+                tableId
+                dataType
+                table {
                   id
-                  user {
-                    id
-                    userName
-                  }
+                dachsUrl
                 }
-              fields {
-                edges {
-                  node {
+                Class {
+                  id
+                  classId
+                  displayName
+                }
+                process {
+                  productLog
+                  startTime,
+                  session {
                     id
-                      displayName
-                      releaseTag {
-                        id
-                        releaseDisplayName
-                      }
+                    user {
+                      id
+                      userName
                     }
                   }
                 }
@@ -152,11 +199,10 @@ export default class CentaurusApi {
             }
           }
         }
-      }
       `);
       return data;
     } catch (e) {
-      return null;
+      console.error(e);
     }
   }
 }

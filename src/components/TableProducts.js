@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import {
   Grid,
@@ -6,88 +5,61 @@ import {
   PagingPanel,
   TableHeaderRow,
 } from '@devexpress/dx-react-grid-material-ui';
-import {
-  PagingState,
-  IntegratedPaging,
-  EditingState,
-} from '@devexpress/dx-react-grid';
 import Card from '@material-ui/core/Card';
-import { ButtonBase } from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
-import { isEmpty, isUndefined } from 'lodash';
+import { withStyles } from '@material-ui/core/styles';
+import { PagingState, IntegratedPaging } from '@devexpress/dx-react-grid';
+
+const styles = {
+  root: {
+    flexGrow: 1,
+  },
+  card: {
+    margin: 40,
+  },
+  content: {
+    margin: 50,
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+};
 
 class TableProducts extends React.Component {
   style = {
     loading: true,
   };
 
-  iconLog = value => {
-    if (isEmpty(value) || isUndefined(value)) {
-      return <span> - </span>;
-    } else {
-      return (
-        <div>
-          <ButtonBase
-            onClick={() => {
-              window.open(value);
-            }}
-          >
-            <Icon>link</Icon>
-          </ButtonBase>
-        </div>
-      );
-    }
-  };
-
-  iconStorage = value => {
-    if (isEmpty(value) || isUndefined(value)) {
-      return <span> - </span>;
-    } else {
-      return (
-        <div>
-          <ButtonBase
-            onClick={() => {
-              window.open(value);
-            }}
-          >
-            <Icon>storage</Icon>
-          </ButtonBase>
-        </div>
-      );
-    }
-  };
-
   render() {
-    const { rows } = this.props;
-
-    rows.map(el => {
-      el.log = this.iconLog(el.productLog);
-      el.storage = this.iconStorage(el.daCHs);
-      return null;
-    });
-
+    const data = this.props;
     return (
       <React.Fragment>
         <Card>
           <Grid
-            rows={rows}
+            rows={
+              data
+                ? data.data.map(el => {
+                    return el;
+                  })
+                : []
+            }
             columns={[
               { name: 'releaseDisplayName', title: 'Release' },
               { name: 'field', title: 'Dataset' },
-              { name: 'dataType', title: 'Type' },
+              { name: 'productType', title: 'Product Type' },
               { name: 'Class', title: 'Class' },
               { name: 'displayName', title: 'Product Name' },
-              { name: 'productType', title: 'Product Type' },
+              { name: 'dataType', title: 'Type' },
               { name: 'processId', title: 'Process ID' },
               { name: 'owner', title: 'Owner' },
               { name: 'band', title: 'Band' },
               { name: 'date', title: 'Date' },
-              { name: 'log', title: 'Log' },
-              { name: 'storage', title: 'Storage' },
             ]}
           >
-            <EditingState />
-            <PagingState defaultCurrentPage={0} pageSize={2} />
+            <PagingState defaultCurrentPage={0} pageSize={5} />
             <IntegratedPaging />
             <Table />
             <TableHeaderRow />
@@ -99,8 +71,4 @@ class TableProducts extends React.Component {
   }
 }
 
-TableProducts.propTypes = {
-  rows: PropTypes.array.isRequired,
-};
-
-export default TableProducts;
+export default withStyles(styles)(TableProducts);
