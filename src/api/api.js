@@ -78,7 +78,7 @@ export default class CentaurusApi {
 
       return data;
     } catch (e) {
-      return null;
+      console.error(e);
     }
   }
 
@@ -100,7 +100,7 @@ export default class CentaurusApi {
       `);
       return releases;
     } catch (e) {
-      return null;
+      console.error(e);
     }
   }
 
@@ -137,7 +137,7 @@ export default class CentaurusApi {
       }
       return datasets;
     } catch (e) {
-      return null;
+      console.error(e);
     }
   }
 
@@ -159,7 +159,7 @@ export default class CentaurusApi {
         `);
       return productType;
     } catch (e) {
-      return null;
+      console.error(e);
     }
   }
 
