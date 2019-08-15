@@ -16,10 +16,10 @@ describe('App', () => {
   it('Mounts', () => {
     expect(
       wrapper
-        .find('Button')
+        .find('Header')
         .at(0)
         .text()
-    ).toBe('Test Primary');
+    ).toBe('Science Products');
   });
 
   afterEach(() => {
