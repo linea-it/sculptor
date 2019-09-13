@@ -8,7 +8,7 @@ export default class CentaurusApi {
     try {
       const tagId = filters.release ? filters.release : 0;
       const fieldId = filters.dataset ? filters.dataset : 0;
-      const typeId = filters.value ? filters.value : 0;
+      const typeId = filters.type ? filters.type : 0;
       const classId = filters.classesValue ? filters.classesValue : 0;
       const sizePage =
         pageSize && typeof pageSize !== 'undefined' ? pageSize : 10;
@@ -58,6 +58,7 @@ export default class CentaurusApi {
                 displayName
                 productType {
                   typeName
+                  displayName
                 }
               }
               process {
@@ -67,6 +68,7 @@ export default class CentaurusApi {
                   user {
                     id
                     userName
+                    displayName
                   }
                 }
                 fields {
@@ -157,63 +159,60 @@ export default class CentaurusApi {
   static async getType() {
     try {
       const productType = await client.query(`
-      query type {
-        productTypeList {
-          edges {
-            node {
-              id
-              typeId
-              displayName
+        query type {
+          productTypeList {
+            edges {
+              node {
+                id
+                typeId
+                displayName
+              }
             }
           }
         }
-      }
-
-        `);
+      `);
       return productType;
     } catch (e) {
       console.error(e);
     }
   }
 
-  static async getClasses() {
+  static async getClasses(typeId) {
+    console.log(typeId);
     try {
-      const data = await client.query(`
-        query search {
-          productsList(first: 10) {
-            edges {
-              node {
-                displayName
-                dataType
-                processId
-                tableId
-                dataType
-                table {
-                  id
-                dachsUrl
-                }
-                Class {
+      let classes = '';
+      if (typeId === 0) {
+        classes = await client.query(`
+          query search {
+            productClassList {
+              edges {
+                node {
                   id
                   classId
                   displayName
                 }
-                process {
-                  productLog
-                  startTime,
-                  session {
-                    id
-                    user {
-                      id
-                      userName
-                    }
-                  }
-                }
               }
             }
           }
-        }
-      `);
-      return data;
+        `);
+        console.log(classes);
+        classes = {
+          productClassByTypeId: classes.productClassList.edges.map(
+            edge => edge.node
+          ),
+        };
+      } else {
+        classes = await client.query(`
+          query search {
+            productClassByTypeId(typeId: ${typeId}) {
+              id
+              classId
+              displayName
+            }
+          }
+        `);
+      }
+      return classes;
     } catch (e) {
       console.error(e);
     }

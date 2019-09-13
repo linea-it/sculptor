@@ -42,10 +42,10 @@ class ToolbarProducts extends React.Component {
     classesInput: [],
     searchs: [],
     bands: [],
-    release: '',
-    dataset: '',
-    type: '',
-    classesValue: '',
+    release: 0,
+    dataset: 0,
+    type: 0,
+    classesValue: 0,
     releaseName: '',
     search: '',
   };
@@ -54,20 +54,23 @@ class ToolbarProducts extends React.Component {
     this.setState(
       {
         band: '',
-        release: '',
-        dataset: '',
-        type: '',
-        classesValue: '',
+        release: 0,
+        dataset: 0,
+        type: 0,
+        classesValue: 0,
         search: '',
       },
       () => {
         this.props.clearData();
+        this.handleChange();
       }
     );
   };
   componentDidMount() {
     this.loadReleases();
+    this.loadDataset(0);
     this.loadType();
+    this.loadClasses(0);
   }
 
   loadReleases = async () => {
@@ -95,6 +98,7 @@ class ToolbarProducts extends React.Component {
     this.setState(
       {
         release: value,
+        dataset: 0,
       },
       () => {
         this.handleChange();
@@ -104,7 +108,10 @@ class ToolbarProducts extends React.Component {
 
   loadDataset = async tagId => {
     const dataDataset = await CentaurusApi.getDataset(tagId);
-    const datasets = dataDataset.fieldsByTagId;
+    const datasets = dataDataset.fieldsByTagId.filter(
+      dataset => dataset.displayName !== 'All Fields'
+    );
+
     this.setState({
       datasets: datasets,
     });
@@ -125,30 +132,31 @@ class ToolbarProducts extends React.Component {
   loadType = async () => {
     const dataType = await CentaurusApi.getType();
     const types = dataType.productTypeList.edges.map(edge => edge.node);
-    this.setState({
-      types: types,
-    });
-  };
-
-  onChangeType = event => {
-    const type = 'type';
-    const value = event.target.value;
-
-    this.props.handleFilterSelected({ value, type });
     this.setState(
       {
-        type: value,
+        types: types,
+        classesValue: 0,
       },
-      () => this.loadClasses(value),
       () => this.handleChange()
     );
   };
 
-  loadClasses = async () => {
-    const dataClass = await CentaurusApi.getClasses();
-    const productClass = dataClass.productsList.edges.map(
-      edge => edge.node.Class
+  onChangeType = event => {
+    const value = event.target.value;
+    this.setState(
+      {
+        type: value,
+      },
+      () => {
+        this.handleChange();
+        this.loadClasses(value);
+      }
     );
+  };
+
+  loadClasses = async typeId => {
+    const dataClass = await CentaurusApi.getClasses(typeId);
+    const productClass = dataClass.productClassByTypeId;
     this.setState({
       classesInput: productClass,
     });
@@ -156,6 +164,7 @@ class ToolbarProducts extends React.Component {
 
   onChangeClasses = event => {
     const value = event.target.value;
+    // console.log(value);
 
     this.setState(
       {
@@ -166,11 +175,11 @@ class ToolbarProducts extends React.Component {
   };
 
   onChangeSearch = event => {
-    const search = event.target.value;
-    if (!search) {
+    const value = event.target.value;
+    if (!value) {
       this.setState({ search: '' });
     }
-    this.setState({ search }, () => this.handleChange());
+    this.setState({ search: value }, () => this.handleChange());
   };
 
   render() {
