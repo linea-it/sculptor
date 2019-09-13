@@ -149,7 +149,6 @@ class TableProducts extends React.Component {
 
   render() {
     const { loading, data, totalCount, currentPage, pageSize } = this.state;
-    console.log(data);
     return (
       <React.Fragment>
         <Card>
