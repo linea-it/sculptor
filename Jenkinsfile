@@ -10,13 +10,6 @@ pipeline {
     }
     agent any
     stages {
-        stage('Running yarn') {
-            steps {
-                sh 'yarn install'
-                sh 'yarn lint'
-                sh 'yarn test'
-            }
-        }
         stage('Building and push MASTER image') {
             when {
                 allOf {
