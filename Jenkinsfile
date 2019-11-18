@@ -33,7 +33,7 @@ pipeline {
                         -H \"content-type: application/json\" \
                         -H \"X-Rundeck-Auth-Token: $RD_AUTH_TOKEN\" \
                         -d '{\"argString\": \"-namespace $namespace -commit $GIT_COMMIT -image $registry:$GIT_COMMIT -deployment $deployment\"}' \
-                        https://fox.linea.gov.br/api/1/job/e79ea1f7-e156-4992-98b6-75995ac4c15a/executions
+                        https://run.linea.gov.br/api/1/job/4e39b30d-fdec-4847-8276-88bb487e9136/executions
                     """
                 }
             }
@@ -56,7 +56,7 @@ pipeline {
                         -H \"content-type: application/json\" \
                         -H \"X-Rundeck-Auth-Token: $RD_AUTH_TOKEN\" \
                         -d '{\"argString\": \"-namespace $namespace_prod -commit $TAG_NAME -image $registry:$TAG_NAME -deployment $deployment\"}' \
-                        https://fox.linea.gov.br/api/1/job/e79ea1f7-e156-4992-98b6-75995ac4c15a/executions
+                        https://run.linea.gov.br/api/1/job/4e39b30d-fdec-4847-8276-88bb487e9136/executions
                     """
                 }
             }
