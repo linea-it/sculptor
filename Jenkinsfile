@@ -6,16 +6,10 @@ pipeline {
         deployment = 'sculptor'
         namespace = 'scienceportal-dev'
         namespace_prod = 'scienceportal'
+        commit = ''
     }
     agent any
     stages {
-        stage('Running yarn') {
-            steps {
-                sh 'yarn install'
-                sh 'yarn lint'
-                sh 'yarn test'
-            }
-        }
         stage('Building and push MASTER image') {
             when {
                 allOf {
@@ -38,8 +32,8 @@ pipeline {
                         curl -D - -X \"POST\" \
                         -H \"content-type: application/json\" \
                         -H \"X-Rundeck-Auth-Token: $RD_AUTH_TOKEN\" \
-                        -d '{\"argString\": \"-namespace $namespace -image $registry:$GIT_COMMIT -deployment $deployment\"}' \
-                        https://fox.linea.gov.br/api/1/job/e79ea1f7-e156-4992-98b6-75995ac4c15a/executions
+                        -d '{\"argString\": \"-namespace $namespace -commit $GIT_COMMIT -image $registry:$GIT_COMMIT -deployment $deployment\"}' \
+                        https://run.linea.gov.br/api/1/job/4e39b30d-fdec-4847-8276-88bb487e9136/executions
                     """
                 }
             }
@@ -61,8 +55,8 @@ pipeline {
                         curl -D - -X \"POST\" \
                         -H \"content-type: application/json\" \
                         -H \"X-Rundeck-Auth-Token: $RD_AUTH_TOKEN\" \
-                        -d '{\"argString\": \"-namespace $namespace_prod -image $registry:$TAG_NAME -deployment $deployment\"}' \
-                        https://fox.linea.gov.br/api/1/job/e79ea1f7-e156-4992-98b6-75995ac4c15a/executions
+                        -d '{\"argString\": \"-namespace $namespace_prod -commit $TAG_NAME -image $registry:$TAG_NAME -deployment $deployment\"}' \
+                        https://run.linea.gov.br/api/1/job/4e39b30d-fdec-4847-8276-88bb487e9136/executions
                     """
                 }
             }
