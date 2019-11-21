@@ -1,8 +1,8 @@
 # Linea Portal Science Products
 
-- Eslint
-- Jest tests
-- Material ui
+- Eslint;
+- Jest tests;
+  - Material UI.
 
 ## Running locally
 
