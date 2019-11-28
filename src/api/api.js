@@ -22,6 +22,7 @@ export default class CentaurusApi {
       const data = await client.query(`
       query search {
         productsList(
+          sort: [fields_release_tag_id_desc],
           tagId:${tagId},
           fieldId:${fieldId},
           typeId:${typeId},
