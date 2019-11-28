@@ -12,11 +12,12 @@ export default class CentaurusApi {
       const classId = filters.classesValue ? filters.classesValue : 0;
       const sizePage =
         pageSize && typeof pageSize !== 'undefined' ? pageSize : 10;
-      let band;
+      // let band;
       let search;
 
       filters.search === null ? (search = '') : (search = filters.search);
-      filters.band === null ? (band = '') : (band = '');
+      // filters.band === null ? (band = '') : (band = '');
+      // band:"${band}",
 
       const data = await client.query(`
       query search {
@@ -25,7 +26,6 @@ export default class CentaurusApi {
           fieldId:${fieldId},
           typeId:${typeId},
           classId: ${classId},
-          band:"${band}",
           search: {
             text: "${search}",
             columns: [
