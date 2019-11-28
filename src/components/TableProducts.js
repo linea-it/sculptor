@@ -5,6 +5,8 @@ import {
   Table,
   PagingPanel,
   TableHeaderRow,
+  TableColumnVisibility,
+  Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import Card from '@material-ui/core/Card';
 import { withStyles } from '@material-ui/core/styles';
@@ -13,6 +15,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import CentaurusApi from './../api/api';
 import moment from 'moment';
 import { isEmpty } from 'lodash';
+import CustomColumnChooser from './CustomColumnChooser';
+
 const styles = {
   root: {
     flexGrow: 1,
@@ -169,7 +173,6 @@ class TableProducts extends React.Component {
               { name: 'dataType', title: 'Type' },
               { name: 'processId', title: 'Process ID' },
               { name: 'owner', title: 'Owner' },
-              { name: 'band', title: 'Band' },
               { name: 'date', title: 'Date' },
             ]}
           >
@@ -182,7 +185,10 @@ class TableProducts extends React.Component {
             <CustomPaging totalCount={totalCount} />
             <Table />
             <TableHeaderRow />
+            <TableColumnVisibility />
+            <Toolbar />
             <PagingPanel pageSizes={this.state.pageSizes} />
+            <CustomColumnChooser />
           </Grid>
           {loading && (
             <CircularProgress

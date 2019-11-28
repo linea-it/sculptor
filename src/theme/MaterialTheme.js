@@ -12,7 +12,15 @@ const theme = createMuiTheme({
     secondary: pink,
   },
   typography: {
+    fontSize: 16,
     useNextVariants: true,
+  },
+  overrides: {
+    Pagination: {
+      activeButton: {
+        color: pink[500],
+      },
+    },
   },
 });
 
