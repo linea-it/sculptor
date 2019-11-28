@@ -120,13 +120,13 @@ class TableProducts extends React.Component {
 
           return {
             displayName: edge.node.displayName,
-            productType: edge.node.Class.productType.typeName,
+            productType: edge.node.Class.productType.displayName,
             processId: edge.node.processId,
             releaseDisplayName: fieldname,
             dataType: edge.node.dataType,
             field: field,
             Class: edge.node.Class.displayName,
-            owner: owner.user.userName,
+            owner: owner.user.displayName,
             date: moment(dateTime).format('YYYY-MM-DD'),
           };
         });
@@ -149,7 +149,6 @@ class TableProducts extends React.Component {
 
   render() {
     const { loading, data, totalCount, currentPage, pageSize } = this.state;
-
     return (
       <React.Fragment>
         <Card>
