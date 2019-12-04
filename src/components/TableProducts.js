@@ -50,6 +50,7 @@ class TableProducts extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.filters !== prevProps.filters) {
+      this.setState({ currentPage: 0 });
       this.loadData();
     }
   }
@@ -91,7 +92,9 @@ class TableProducts extends React.Component {
     const dataSearch = this.props.filters;
     const { pageSize, after } = this.state;
 
-    this.setState({ loading: true });
+    this.setState({
+      loading: true,
+    });
 
     if (!isEmpty(dataSearch)) {
       const search = await CentaurusApi.searchSelectedFilter(
