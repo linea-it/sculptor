@@ -27,10 +27,9 @@ const styles = () => ({
   },
 });
 
-const homeUrl =
-process.env.NODE_ENV === 'production'
-  ? window._env_.REACT_APP_HOME_URL
-  : process.env.REACT_APP_HOME_URL;
+const homeUrl = `${window.location.protocol}//${window.location.hostname}${
+  window.location.port ? ':' : ''
+}${window.location.port}`;
 
 function Header(props) {
   const { classes } = props;
